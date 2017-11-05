@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>人脉</title>
+	<meta charset="utf-8">
+{#    <meta http-equiv="X-UA-Compatible" content="IE=edge">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1">#}
+    {% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+	<script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+    <style>
+        html{
+	font-family: "微软雅黑";
+	height: 100%;
+}
+body{
+	margin: 0;
+	height: 100%;
+	background-color: #f1f4f5;
+}
+#pageIndex header{
+	text-align: center;
+	background-color: #fff;
+	height: 88px;
+}
+#pageIndex .container{
+	min-width: 1200px;
+	display: inline-block;
+}
+#pageIndex header img{
+	height: 40px;
+	float: left;
+	padding: 24px 50px 24px 0;
+}
+#pageIndex header ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+#pageIndex header li{
+	float: left;
+	margin: 0 24px;
+	line-height: 40px;
+}
+#pageIndex header a{
+	display: block;
+	padding: 24px 18px;
+	font-size: 18px;
+	color: #333;
+	text-decoration: none;
+}
+#pageIndex header li:nth-child(1){
+	border-bottom: 4px solid #26c6d3;
+}
+#pageIndex header li:nth-child(1) a{
+	font-weight: bolder;
+	color: #26c6d4;
+}
+#pageIndex header a.logOut{
+	float: right;
+	color: #26c6d4;
+	font-size: 16px;
+	display: inline-block;
+	padding: 12px 20px;
+	margin-top: 20px;
+	border: 1px solid #26c6d4;
+	border-radius: 25px;
+}
+#pageIndex header li:hover, #pageIndex header a:hover{
+	background-color: #eee;
+}
+#pageIndex section.selectBox{
+	text-align: center;
+}
+#pageIndex section.selectBox .label{
+	margin: 30px 0 10px 24px;
+	text-align: left;
+	font-weight: bold;
+	font-size: 18px;
+	color: #32c5d2;
+	border-left: 4px solid #32c5d2;
+	padding-left: 14px;
+}
+#pageIndex section.selectBox .remarkLine{
+	color: #32c5d2;
+	text-align: left;
+	font-size: 16px;
+	padding: 0 36px;
+}
+#pageIndex section.selectBox .labelBox{
+	text-align: left;
+	padding: 0 40px;
+	max-width: 1200px;
+}
+#pageIndex section.selectBox .labelBox a, #pageIndex .contactsBox a{
+	display: inline-block;
+	background-color: #32c5d2;
+	color: #fff;
+	text-decoration: none;
+	padding: 8px 24px;
+	border-radius: 14px;
+	margin: 9px 16px;
+}
+#pageIndex section.selectBox .progress{
+	position: relative;
+	width: 400px;
+	margin: 10px 46px 25px;
+}
+.progress_bg{
+	height: 8px;
+	border-radius: 2px;
+	overflow: hidden;
+	background-color: #fff;
+}
+.progress_bar{
+	position: absolute;
+	top: 0; left: 0;
+	background: #51ced9;
+	width: 0;
+	height: 8px;
+	border-radius: 2px;
+}
+.progress_Left, .progress_Right{
+	position: absolute;
+	left: 0px; top:-2px;
+	margin-left: -6px;
+}
+.progress_btn{
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background-color: #32c5d2;
+	cursor: pointer;
+	border: 3px #3598dc solid;
+	box-sizing: border-box;
+}
+.textRight, .textLeft{
+	color: #adadae;
+	font-size: 14px;
+	margin-top: 5px;
+}
+.textRight{ float: right; }
+.textLeft{ float: left; }
+#pageIndex .contactsBox{
+	margin-top: 20px;
+	text-align: center;
+}
+#pageIndex .contactsBox .container{
+	text-align: left;
+	width: 1200px;
+}
+.cover{
+	position: fixed;
+	top: 0; left: 0;
+	height: 100%;
+	width: 100%;
+	color: #333;
+	display: none;
+}
+.cover .detailBox{
+	width: 400px;
+	height: 500px;
+	margin: 70px auto;
+	border: 1px solid #26c6d3;
+	border-radius: 2px;
+	background-color: #fff;
+	overflow: auto;
+}
+.cover .closeBtn{
+	float: right;
+	border: none;
+	background: none;
+	margin: 10px;
+	cursor: pointer;
+}
+.cover .mainInfoBox img{
+	float: left;
+	width: 90px;
+	height: 90px;
+	border-radius: 50%;
+	margin: 0 20px;
+}
+.cover .mainInfoBox .rightBox>div:nth-child(1){
+	margin: 20px 0 5px 0;
+	font-weight: bold;
+	font-size: 24px;
+}
+.coverProgress{
+	position: relative;
+	width: 150px;
+	margin: 10px 46px 25px 135px;
+}
+.coverProgress_bg{
+	height: 4px;
+	overflow: hidden;
+	background-color: #eee;
+}
+.coverProgress_bar{
+	position: absolute;
+	top: 0; left: 0;
+	background: #51ced9;
+	width: 0;
+	height: 4px;
+}
+.coverProgress_btn{
+	position: absolute;
+	left: 0px; top:-3px;
+	margin-left: -5px;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background-color: #32c5d2;
+	cursor: pointer;
+	border: 1px #eee solid;
+	box-sizing: border-box;
+}
+.coverText{
+	color: #adadae;
+	font-size: 14px;
+	margin-top: 5px;
+	position: absolute;
+	top: -12px; right: -30px;
+}
+.cover .labelBox{
+	margin: 15px 20px;
+	color: #fff;
+}
+.cover .labelItem{
+	display: inline-block;
+	background-color: #32c5d2;
+	border-radius: 2px;
+	padding: 6px 8px;
+	margin: 6px;
+}
+.cover .addLable{
+	margin: 6px 8px;
+	cursor: pointer;
+}
+.cover .delete{
+	float: right;
+	font-size: 12px;
+	margin: -5px -5px 5px 5px;
+	color: #32c5d2;
+	cursor: pointer;
+}
+.cover .delete:hover{
+	color: #fff;
+}
+.cover .basicInfo>div, .moreInfo>div{
+	font-weight: bold;
+	font-size: 16px;
+	margin: 10px 20px;
+
+}
+.cover .basicInfo>ul, .moreInfo>ul{
+	list-style: none;
+	margin: 0;
+	padding-left: 40px;
+}
+.cover .basicInfo li, .moreInfo li{
+	margin: 3px 0;
+}
+.cover .basicInfo img, .moreInfo img{
+	float: right;
+	margin: 5px 30px;
+	cursor: pointer;
+}
+        body{
+            padding:0;
+        }
+    </style>
+</head>
+<body>
+  <div id="pageIndex">
+    <header>
+      <div class="container">
+        <img src="{% static 'img/logo2.png' %}">
+        <ul>
+          <li><a href="#">人脉</a></li>
+          <li><a href="{% url 'event' %}">事件</a></li>
+          <li><a href="#">个人中心</a></li>
+        </ul>
+        <a href="#" class="logOut">退出登录</a>
+      </div>
+    </header>
+    <section class="selectBox"> 
+      <div class="container">
+        <div class="label">重要度过滤</div>
+        <div class="progress">
+          <div class="progress_bg">
+            <div class="progress_bar"></div>
+          </div>
+          <div class="progress_Left">
+            <div class="progress_btn"></div>
+            <div class="textLeft">0</div>
+          </div>
+          <div class="progress_Right">
+            <div class="progress_btn"></div>
+            <div class="textRight">0</div>
+          </div>
+        </div>
+        <div class="remarkLine">*注：数字越大代表越重要</div>
+        <div class="label">标签选择</div>
+        <div class="labelBox">
+
+            {% for elem in tags %}<a href="http://172.16.53.158:8000/userhastag2/{{ elem }}/">{{ elem }}</a>{% endfor %}
+{#             <script type="text/javascript">#}
+{#            $(".labelBox a").click(function(){#}
+{#               $.post("{% url 'userhastag' %}", {#}
+{#                  tag_list: $(this).html()#}
+{#               }, function(res){#}
+{#                  console.log(res);#}
+{#               })#}
+{#            })#}
+{#        </script>#}
+        </div>
+      <div class="label">标签选择</div>
+      </div>
+    </section>
+    <section class="contactsBox">
+      <div class="container">
+          {% for elem in user %}
+              <a href="#" onclick="javascript:$('#2').show();$('#1').html('{{ elem.realname }}');$('#3').html('昵称：{{ elem.nickname }}');$('#4').html('手机号：{{ elem.phone }}');$('#5').html('邮箱：{{ elem.email }}');$('#6').html('生日：{{ elem.birthday }}');$('#7').html('年龄：{{ elem.age }}');$('#8').html('婚姻状况：{{ elem.marriage }}');$('#9').html('备注：{{ elem.remark }}');">
+                  {{ elem.realname }}
+              </a>
+{#              <script type="text/javascript">#}
+{#                 // 获取名字#}
+{#                // 打开cover#}
+{#                    $("#pageIndex .contactsBox a").click(function () {#}
+{#    	                    $(".cover").show();#}
+{#    	                    alert("{{ elem.realname }}")#}
+{#    	                    $("#1").html("{{ elem.realname }}")#}
+{#                     })#}
+{##}
+{#              </script>#}
+          {% endfor %}
+      </div>
+    </section>
+  </div>
+  <div class="cover" id="2">
+    <div class="detailBox">
+      <button class="closeBtn">X</button>
+      <div class="mainInfoBox">
+        <img src="{% static 'img/logo2.png' %}">
+        <div class="rightBox">
+          <div id="1">卫晓依</div>
+          <div>重要程度</div>
+          <div class="coverProgress">
+            <div class="coverProgress_bg">
+              <div class="coverProgress_bar"></div>
+            </div>
+            <div class="coverProgress_btn"></div>
+            <div class="coverText">0</div>
+          </div>
+        </div>
+      </div>
+      <div class="labelBox">
+        <div class="labelItem">同学<div class="delete">X</div></div>
+        <div class="labelItem">...<div class="delete">X</div></div>
+        <div class="labelItem">...<div class="delete">X</div></div>
+        <div class="labelItem">...<div class="delete">X</div></div>
+        <div class="labelItem">...<div class="delete">X</div></div>
+        <div class="addLable"><img src="{% static 'img/Tag-Add.png' %}"></div>
+      </div>
+      <div class="basicInfo">
+        <img src="{% static 'img/change.png' %}">
+        <div>基本信息（涉及短信发送）</div>
+        <ul>
+          <li id="3">昵称</li>
+          <li id="4">手机号</li>
+          <li id="5">邮箱</li>
+          <li id="6">生日</li>
+          <li id="7">年龄</li>
+        </ul>
+      </div>
+      <div class="moreInfo">
+        <img src="{% static 'img/change.png' %}">
+        <div>更多信息</div>
+        <ul>
+          <li id="8">婚姻状况</li>
+          <li id="9">备注</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script>
+      $(".labelBox a").click(function () {
+	    $.post('127.0.0.1/userhastag', {
+	        tag_list: $("this").html()
+          }, function (data) {
+            $(".labelBox").remove()
+            $(".labelBox").append()
+            console.log(data)
+          })
+    })
+    // $.ajax({
+    //   url: 'http://172.16.53.158:8000/alltags
+    //   processData: false,
+    //   type:'get',
+    //   success: function(data){
+    //     // 清空labelBox
+    //     $(".labelBox").remove()
+    //     // 放入<a>标签
+    //     $(".labelBox").append()
+    //     console.log(data);
+    //   },
+    //   error: function(XMLHttpRequest, textStatus, errorThrown) {
+    //     alert(XMLHttpRequest.status);
+    //     alert(XMLHttpRequest.readyState);
+    //     alert(textStatus);
+    //   }
+    // });
+
+    // cover获取标签
+    // 关闭cover
+    $(".cover .closeBtn").click(function () {
+    	$(".cover").hide();
+    })
+	// 滑动块start
+    var tag1 = false, ox1 = 0, left1 = 0, bgleft1 = 0;
+    var tag2 = false, ox2 = 0, left2 = 0, bgleft2 = 0;
+    $('.progress_Right').mousedown(function(e) {
+      ox1 = e.pageX - left1;
+      tag1 = true;
+    });
+    $('.progress_Left').mousedown(function(e) {
+      ox2 = e.pageX - left2;
+      tag2 = true;
+    });
+    $(document).mouseup(function() { tag1 = tag2 = false; });
+    $('.progress').mousemove(function(e) {//鼠标移动
+      if (tag1) {
+        left1 = e.pageX - ox1;
+        if (left1 <= left2) {
+          left1 = left2;
+        }else if (left1 > 400) {
+          left1 = 400;
+        }
+        $('.progress_Right').css('left', left1);
+        $('.progress_bar').width(left1 - left2);
+        $('.textRight').html(parseInt((left1/400)*100));
+      }
+      if (tag2) {
+        left2 = e.pageX - ox2;
+        if (left2 <= 0) {
+          left2 = 0;
+        }else if (left2 > left1) {
+          left2 = left1;
+        }
+        $('.progress_Left').css('left', left2);
+        $('.progress_bar').width(left1 - left2).css('left', left2);
+        $('.textLeft').html(parseInt((left2/400)*100));
+      }
+    });
+    // 滑动块end
+    // cover滑动块
+    var tag3 = false, ox3 = 0, left3 = 0, bgleft3 = 0;
+    $('.coverProgress').mousedown(function(e) {
+      ox3 = e.pageX - left3;
+      tag3 = true;
+    });
+    $(document).mouseup(function() { tag3 = false; });
+    $('.coverProgress').mousemove(function(e) {//鼠标移动
+      if (tag3) {
+        left3 = e.pageX - ox3;
+        if (left3 <= 0) {
+          left3 = 0;
+        }else if (left3 > 150) {
+          left3 = 150;
+        }
+        $('.coverProgress_btn').css('left', left3);
+        $('.coverProgress_bar').width(left3);
+        $('.coverText').html(parseInt((left3/150)*100));
+      }
+    });
+    $('.coverProgress_bg').click(function(e) {//鼠标点击
+     if (!tag3) {
+      bgleft3 = $('.coverProgress_bg').offset().left;
+      left3 = e.pageX - bgleft3;
+      if (left3 <= 0) {
+       left3 = 0;
+      }else if (left3 > 150) {
+       left3 = 150;
+      }
+      $('.coverProgress_btn').css('left', left3);
+      $('.coverProgress_bar').animate({width:left3},300);
+      $('.coverText').html(parseInt((left3/150)*100));
+     }
+    });
+  </script>
+</body>
+</html>

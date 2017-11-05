@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>事件</title>
+	<meta charset="utf-8">
+    {% load static %}
+	<style type="text/css">
+    html{
+      font-family: "微软雅黑";
+      height: 100%;
+    }
+    body{
+      margin: 0;
+      height: 100%;
+      background-color: #f1f4f5;
+    }
+    #pageEvent header{
+      text-align: center;
+      background-color: #fff;
+      height: 88px;
+    }
+    #pageEvent{
+      text-align: center;
+    }
+    #pageEvent .container{
+      width: 1200px;
+      display: inline-block;
+      text-align: left;
+    }
+    #pageEvent header img{
+      height: 40px;
+      float: left;
+      padding: 24px 50px 24px 0;
+    }
+    #pageEvent header ul{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    #pageEvent header li{
+      float: left;
+      margin: 0 24px;
+      line-height: 40px;
+    }
+    #pageEvent header a{
+      display: block;
+      padding: 24px 18px;
+      font-size: 18px;
+      color: #333;
+      text-decoration: none;
+    }
+    #pageEvent header li:nth-child(2){
+      border-bottom: 4px solid #26c6d3;
+    }
+    #pageEvent header li:nth-child(2) a{
+      font-weight: bolder;
+      color: #26c6d4;
+    }
+    #pageEvent header a.logOut{
+      float: right;
+      color: #26c6d4;
+      font-size: 16px;
+      display: inline-block;
+      padding: 12px 20px;
+      margin-top: 20px;
+      border: 1px solid #26c6d4;
+      border-radius: 25px;
+    }
+    #pageEvent header li:hover, #pageIndex header a:hover{
+      background-color: #eee;
+    }
+    #pageEvent .newBox button{
+      border: none;
+      background-color: #32c5d2;
+      color: #fff;
+      font-size: 24px;
+      padding: 10px 20px;
+      border-radius: 5px;
+      margin: 30px 0;
+      cursor: pointer;
+    }
+    #pageEvent .BOX{
+      border: 1px solid #eee;
+      background-color: #fff;
+      width: 350px;
+      max-height: 250px;
+      display: inline-block;
+      margin-right: 40px;
+      margin-bottom: 40px;
+    }
+    #pageEvent .BOX .title{
+      font-size: 20px;
+      font-weight: bold;
+      color: #32c5d2;
+      padding: 20px 20px;
+    }
+    #pageEvent .BOX .title img{
+      float: right;
+      cursor: pointer;
+    }
+    #pageEvent .BOX .time, #pageEvent .BOX .template{
+      padding: 0 20px 10px;
+      color: #aaa;
+    }
+    #pageEvent .BOX .template{
+      max-height: 84px;
+      overflow: ellipsis;
+    }
+    #pageEvent .BOX .labelBox{
+      padding: 0 10px;
+    }
+    #pageEvent .BOX .labelBox>div{
+      background-color: #32c5d2;
+      border-radius: 20px;
+      padding: 5px 15px;
+      display: inline-block;
+      color: #fff;
+      margin: 20px 5px;
+    }
+    .cover{
+      position: fixed;
+      top: 0; left: 0;
+      height: 100%;
+      width: 100%;
+      color: #333;
+      display: none;
+    }
+    .cover .detailBox{
+      width: 400px;
+      height: 500px;
+      margin: 70px auto;
+      border: 1px solid #26c6d3;
+      border-radius: 2px;
+      background-color: #fff;
+      overflow: auto;
+    }
+    .cover .header{
+      line-height: 50px;
+      background-color: #32c5d2;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 0 20px;
+    }
+    .cover .closeBtn{
+      float: right;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+    .cover form>div{
+      margin: 20px;
+    }
+    .cover form input{
+      font-size: 16px;
+      line-height: 1.5;
+      margin: 0 10px;
+      width: 250px;
+      border: 1px solid #aaa;
+    }
+    .cover form textarea{
+      margin: 10px 0;
+      border: 1px solid #aaa;
+      width: 340px;
+      resize: none;
+    }
+    .cover form button{
+      background-color: #aaa;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      margin: 10px 10px 0 0;
+      cursor: pointer;
+    }
+    .cover form button.clicked{
+      background-color: #32c5d2;
+    }
+    .cover form .submitBox{
+      text-align: center;
+    }
+    .cover form input[type=submit]{
+      margin: 20px 20px;
+      padding: 10px 20px;
+      width: 200px;
+      background-color: #32c5d2;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+  <link rel="stylesheet" type="text/css" href="./event.css">
+	<script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body>
+  <div id="pageEvent">
+    <header>
+      <div class="container">
+        <img src="{% static 'img/logo2.png' %}">
+        <ul>
+          <li><a href="{% url 'index' %}">人脉</a></li>
+          <li><a href="#">事件</a></li>
+          <li><a href="#">个人中心</a></li>
+        </ul>
+        <a href="#" class="logOut">退出登录</a>
+      </div>
+    </header>
+    <section class="main">
+      <div class="container newBox"><button>新建事件</button></div>
+      <div class="container">
+        {% for elem in user %}
+            <div class="BOX">
+          <div class="title">{{ elem.friend_id.realname }}<img src="{% static 'img/change.png' %}"></div>
+          <div class="time">{{ elem.time }}</div>
+          <div class="template">{{ elem.content }}</div>
+          <div class="labelBox">
+            <div>VIP客户</div><div>普通客户</div><div>好朋友</div>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </section>
+  </div>
+  <div class="cover">
+    <div class="detailBox">
+      <div class="header">新建事件<div class="closeBtn">X</div></div>
+      <form>
+        <div><label>事件名称：</label><input type="text" name="eventName"></div>
+        <div><label>问候时间：</label><input type="text" name="eventTime"></div>
+        <div>
+          <label>问候内容：</label><br>
+          <textarea rows="4"></textarea>
+        </div>
+        <div>
+          <label>选择对象：</label><br>
+          <button class="clicked">全部</button><button class="clicked">xxx</button><button>xxx</button><button>xxx</button>
+        </div>
+        <div class="submitBox"><input type="submit" value="保存"></div>
+      </form>
+    </div>
+  </div>
+  <script type="text/javascript">
+    $("#pageEvent .newBox").click(function(){
+      $(".cover").show()
+    })
+    $("#pageEvent .BOX img").click(function(){
+      $(".cover").show()
+    })
+    $(".cover .closeBtn").click(function(){
+      $(".cover").hide()
+    })
+  </script>
+</body>
+</html>

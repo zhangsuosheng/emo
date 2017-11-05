@@ -1,0 +1,112 @@
+html{
+	font-family: "微软雅黑";
+	height: 100%;
+}
+body{
+	margin: 0;
+	height: 100%;
+	background-color: #f1f4f5;
+}
+#pageEvent header{
+	text-align: center;
+	background-color: #fff;
+	height: 88px;
+}
+#pageEvent{
+	text-align: center;
+}
+#pageEvent .container{
+	width: 1200px;
+	display: inline-block;
+	text-align: left;
+}
+#pageEvent header img{
+	height: 40px;
+	float: left;
+	padding: 24px 50px 24px 0;
+}
+#pageEvent header ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+#pageEvent header li{
+	float: left;
+	margin: 0 24px;
+	line-height: 40px;
+}
+#pageEvent header a{
+	display: block;
+	padding: 24px 18px;
+	font-size: 18px;
+	color: #333;
+	text-decoration: none;
+}
+#pageEvent header li:nth-child(2){
+	border-bottom: 4px solid #26c6d3;
+}
+#pageEvent header li:nth-child(2) a{
+	font-weight: bolder;
+	color: #26c6d4;
+}
+#pageEvent header a.logOut{
+	float: right;
+	color: #26c6d4;
+	font-size: 16px;
+	display: inline-block;
+	padding: 12px 20px;
+	margin-top: 20px;
+	border: 1px solid #26c6d4;
+	border-radius: 25px;
+}
+#pageEvent header li:hover, #pageIndex header a:hover{
+	background-color: #eee;
+}
+#pageEvent .newBox button{
+	border: none;
+	background-color: #32c5d2;
+	color: #fff;
+	font-size: 24px;
+	padding: 10px 20px;
+	border-radius: 5px;
+	margin: 30px 0;
+	cursor: pointer;
+}
+#pageEvent .BOX{
+	border: 1px solid #eee;
+	background-color: #fff;
+	width: 350px;
+	max-height: 250px;
+	display: inline-block;
+	margin-right: 40px;
+	margin-bottom: 40px;
+}
+#pageEvent .BOX .title{
+	font-size: 20px;
+	font-weight: bold;
+	color: #32c5d2;
+	padding: 20px 20px;
+}
+#pageEvent .BOX .title img{
+	float: right;
+	cursor: pointer;
+}
+#pageEvent .BOX .time, #pageEvent .BOX .template{
+	padding: 0 20px 10px;
+	color: #aaa;
+}
+#pageEvent .BOX .template{
+	max-height: 84px;
+	overflow: ellipsis;
+}
+#pageEvent .BOX .labelBox{
+	padding: 0 10px;
+}
+#pageEvent .BOX .labelBox>div{
+	background-color: #32c5d2;
+	border-radius: 20px;
+	padding: 5px 15px;
+	display: inline-block;
+	color: #fff;
+	margin: 20px 5px;
+}

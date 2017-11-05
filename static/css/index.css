@@ -1,0 +1,256 @@
+html{
+	font-family: "微软雅黑";
+	height: 100%;
+}
+body{
+	margin: 0;
+	height: 100%;
+	background-color: #f1f4f5;
+}
+#pageIndex header{
+	text-align: center;
+	background-color: #fff;
+	height: 88px;
+}
+#pageIndex .container{
+	min-width: 1200px;
+	display: inline-block;
+}
+#pageIndex header img{
+	height: 40px;
+	float: left;
+	padding: 24px 50px 24px 0;
+}
+#pageIndex header ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+#pageIndex header li{
+	float: left;
+	margin: 0 24px;
+	line-height: 40px;
+}
+#pageIndex header a{
+	display: block;
+	padding: 24px 18px;
+	font-size: 18px;
+	color: #333;
+	text-decoration: none;
+}
+#pageIndex header li:nth-child(1){
+	border-bottom: 4px solid #26c6d3;
+}
+#pageIndex header li:nth-child(1) a{
+	font-weight: bolder;
+	color: #26c6d4;
+}
+#pageIndex header a.logOut{
+	float: right;
+	color: #26c6d4;
+	font-size: 16px;
+	display: inline-block;
+	padding: 12px 20px;
+	margin-top: 20px;
+	border: 1px solid #26c6d4;
+	border-radius: 25px;
+}
+#pageIndex header li:hover, #pageIndex header a:hover{
+	background-color: #eee;
+}
+#pageIndex section.selectBox{
+	text-align: center;
+}
+#pageIndex section.selectBox .label{
+	margin: 30px 0 10px 24px;
+	text-align: left;
+	font-weight: bold;
+	font-size: 18px;
+	color: #32c5d2;
+	border-left: 4px solid #32c5d2;
+	padding-left: 14px;
+}
+#pageIndex section.selectBox .remarkLine{
+	color: #32c5d2;
+	text-align: left;
+	font-size: 16px;
+	padding: 0 36px;
+}
+#pageIndex section.selectBox .labelBox{
+	text-align: left;
+	padding: 0 40px;
+	max-width: 1200px;
+}
+#pageIndex section.selectBox .labelBox a, #pageIndex .contactsBox a{
+	display: inline-block;
+	background-color: #32c5d2;
+	color: #fff;
+	text-decoration: none;
+	padding: 8px 24px;
+	border-radius: 14px;
+	margin: 9px 16px;
+}
+#pageIndex section.selectBox .progress{
+	position: relative; 
+	width: 400px;
+	margin: 10px 46px 25px;
+}
+.progress_bg{
+	height: 8px;
+	border-radius: 2px;
+	overflow: hidden;
+	background-color: #fff;
+}
+.progress_bar{
+	position: absolute;
+	top: 0; left: 0;
+	background: #51ced9; 
+	width: 0; 
+	height: 8px; 
+	border-radius: 2px;
+}
+.progress_Left, .progress_Right{
+	position: absolute;
+	left: 0px; top:-2px;
+	margin-left: -6px;
+}
+.progress_btn{
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background-color: #32c5d2; 
+	cursor: pointer;
+	border: 3px #3598dc solid;
+	box-sizing: border-box;
+}
+.textRight, .textLeft{
+	color: #adadae;
+	font-size: 14px;
+	margin-top: 5px;
+}
+.textRight{ float: right; }
+.textLeft{ float: left; }
+#pageIndex .contactsBox{
+	margin-top: 50px;
+	text-align: center;
+}
+#pageIndex .contactsBox .container{
+	text-align: left;
+	max-width: 1200px;
+}
+.cover{
+	position: fixed;
+	top: 0; left: 0;
+	height: 100%;
+	width: 100%;
+	color: #333;
+	display: none;
+}
+.cover .detailBox{
+	width: 400px;
+	height: 500px;
+	margin: 70px auto;
+	border: 1px solid #26c6d3;
+	border-radius: 2px;
+	background-color: #fff;
+	overflow: auto;
+}
+.cover .closeBtn{
+	float: right;
+	border: none;
+	background: none;
+	margin: 10px;
+	cursor: pointer;
+}
+.cover .mainInfoBox img{
+	float: left;
+	width: 90px;
+	height: 90px;
+	border-radius: 50%;
+	margin: 0 20px;  
+}
+.cover .mainInfoBox .rightBox>div:nth-child(1){
+	margin: 20px 0 5px 0;
+	font-weight: bold;
+	font-size: 24px;
+}
+.coverProgress{
+	position: relative; 
+	width: 150px;
+	margin: 10px 46px 25px 135px;
+}
+.coverProgress_bg{
+	height: 4px;
+	overflow: hidden;
+	background-color: #eee;
+}
+.coverProgress_bar{
+	position: absolute;
+	top: 0; left: 0;
+	background: #51ced9; 
+	width: 0; 
+	height: 4px; 
+}
+.coverProgress_btn{
+	position: absolute;
+	left: 0px; top:-3px;
+	margin-left: -5px;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background-color: #32c5d2; 
+	cursor: pointer;
+	border: 1px #eee solid;
+	box-sizing: border-box;
+}
+.coverText{
+	color: #adadae;
+	font-size: 14px;
+	margin-top: 5px;
+	position: absolute;
+	top: -12px; right: -30px;
+}
+.cover .labelBox{
+	margin: 15px 20px;
+	color: #fff;
+}
+.cover .labelItem{
+	display: inline-block;
+	background-color: #32c5d2;
+	border-radius: 2px;
+	padding: 6px 8px;
+	margin: 6px;
+}
+.cover .addLable{
+	margin: 6px 8px;
+	cursor: pointer;
+}                                                                                                           
+.cover .delete{
+	float: right;
+	font-size: 12px;
+	margin: -5px -5px 5px 5px;
+	color: #32c5d2;
+	cursor: pointer;
+} 
+.cover .delete:hover{
+	color: #fff;
+}
+.cover .basicInfo>div, .moreInfo>div{
+	font-weight: bold;
+	font-size: 16px;
+	margin: 10px 20px;
+
+}
+.cover .basicInfo>ul, .moreInfo>ul{
+	list-style: none;
+	margin: 0;
+	padding-left: 40px;
+}
+.cover .basicInfo li, .moreInfo li{
+	margin: 3px 0;
+}
+.cover .basicInfo img, .moreInfo img{
+	float: right;
+	margin: 5px 30px;
+	cursor: pointer;
+}
