@@ -53,3 +53,14 @@ class Remind(models.Model):
     friend_id=models.ForeignKey(Friends,to_field="friend_id")#好友id，外键
     content=models.CharField(max_length=500)#提醒内容，非空
     time=models.DateTimeField()#提醒时间，非空
+
+# 标签表
+class Tags(models.Model):
+    tag_id=models.AutoField(unique=True,primary_key=True)#标签id，自增
+    tag_text=models.CharField(max_length=100)#标签内容，不能为空
+
+# 好友&标签关系表
+class Tags_Friends(models.Model):
+    tag_friend_id=models.AutoField(unique=True,primary_key=True)# 关系号，自增
+    friend_id=models.ForeignKey(Friends,to_field="friend_id")# 好友id，外键
+    tag_id=models.ForeignKey(Tags,to_field="tag_id")# 标签id，自增

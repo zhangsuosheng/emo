@@ -304,8 +304,10 @@ body{
         <div class="remarkLine">*注：数字越大代表越重要</div>
         <div class="label">标签选择</div>
         <div class="labelBox">
+            <!--这里不要用静态链接，尽量用带参数的url需要修改一下！！！！！！！-->
+{#            {% for elem in tags %}<a href="http://172.16.53.158:8000/userhastag2/{{ elem }}/">{{ elem }}</a>{% endfor %}#}
+            {% for elem in tags %}<a href="{% url 'userhastag2' elem %}">{{ elem }}</a>{% endfor %}
 
-            {% for elem in tags %}<a href="http://172.16.53.158:8000/userhastag2/{{ elem }}/">{{ elem }}</a>{% endfor %}
 {#             <script type="text/javascript">#}
 {#            $(".labelBox a").click(function(){#}
 {#               $.post("{% url 'userhastag' %}", {#}

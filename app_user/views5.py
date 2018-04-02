@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 import json
 
-from app_user.models import Friends
+from app_user.models import Friends,Remind
 
 #根据faceuid查询好友
 def getbyface(request):
@@ -26,3 +26,13 @@ def getbysex(request):
 
     else:
         return HttpResponse(u'请使用POST调用该接口')
+
+def addremind(request):
+    if request.method =="POST":
+
+        name=request.POST.get('eventName')
+        time=request.POST.get('eventTime')
+        content=request.POST.get('eventContent')
+        Remind.objects.create(time=time,content=content)
+    else:
+        return HttpResponse(u'请使用POST方法访问该接口')
