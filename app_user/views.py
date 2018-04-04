@@ -12,32 +12,47 @@ from django.conf import  settings
 @login_required
 def index(request):
     # 仅使用了加盐的cookie来保持登陆
-    username=request.get_signed_cookie('username',salt='abc')
+    username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
     query_dict={
         'query':{
             'match_all':{}
         }
     }
-    result=settings.ELASTIC_OPTER.query_friend_docu('haha',query_dict)
-
-    friends=result['hits']['hits']
+    result=settings.ELASTIC_OPTER.query_friend_docu(username,query_dict)
+    hits=result['hits']['hits']
 
     tags=[]
-    for elem_dict in friends:
+    tags_num=[]
+    tags_text=[]
+    friends=[]
+    for elem_dict in hits:
         tag_dict=elem_dict['_source']
         # print(len(elem_dict))
         for key in tag_dict.keys():
-            if key == "username":
+            if key == settings.KEY_OF_FRIEND_NAME:
+                friends.append(tag_dict[key])
                 pass
             elif type(tag_dict[key]) is type('str'):
                 tags.append(tag_dict[key])
+                tags_text.append(tag_dict[key])
             elif type(tag_dict[key]) is type(0):
                 tags.append(key)
+                tags_num.append(key)
     tags=list(set(tags))
+    tags_text=list(set(tags_text))
+    tags_num=list(set(tags_num))
 
-    # print(friends)
-    # print(username)
-    return render(request,"index.html",{'friends':friends,'username':username,'tags':tags})
+    return render(request,"index.html",{'friends':friends,'username':username,'tags':tags,'tags_num':tags_num,'tags_text':tags_text,'KEY_OF_FRIEND_NAME':settings.KEY_OF_FRIEND_NAME})
+
+@login_required
+def new_friends(request):
+    if request.method == 'POST':
+        username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
+        help(request)
+        temp=request.POST.get(settings.KEY_OF_FRIEND_NAME)
+        result={"status":"111"}
+        return HttpResponse(json.dumps(result))
+        # return json.dumps(result)
 
 
 

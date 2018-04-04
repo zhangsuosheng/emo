@@ -25,6 +25,8 @@ urlpatterns = [
     url(r'^accounts/regist/',regist_login.regist_view,name="regist"),
     url(r'^accounts/logout/', regist_login.logout_view, name="logout"),
     url(r'^$',views.index,name="index"),
+    url(r'^newfriends/$',views.new_friends,name="newfriends"),
+
     url(r'^event/$',views.event,name="event"),
 
     url(r'^remind/$',views.remind,name="remind"),

@@ -17,8 +17,9 @@
 <body>
 <h1>注册页面</h1>
 <form action="{% url 'regist' %}"  method="post"  enctype="multipart/form-data">
-{{userform.as_p}}
-<input type="submit" value = "Regist" />
+    {{userform.as_p}}
+    <input type="submit" value = "Regist" /><br>
+    <a href="{% url 'login' %}">go to login</a>
 </form>
 </body>
 </html>
