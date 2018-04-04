@@ -305,8 +305,10 @@ body{
         <div class="label">标签选择</div>
         <div class="labelBox">
             <!--这里不要用静态链接，尽量用带参数的url需要修改一下！！！！！！！-->
+            {% for elem in tags %}<a href="">{{ elem }}</a>{% endfor %}
+
 {#            {% for elem in tags %}<a href="http://172.16.53.158:8000/userhastag2/{{ elem }}/">{{ elem }}</a>{% endfor %}#}
-            {% for elem in tags %}<a href="{% url 'userhastag2' elem %}">{{ elem }}</a>{% endfor %}
+{#            {% for elem in tags %}<a href="{% url 'userhastag2' elem %}">{{ elem }}</a>{% endfor %}#}
 
 {#             <script type="text/javascript">#}
 {#            $(".labelBox a").click(function(){#}
@@ -323,10 +325,10 @@ body{
     </section>
     <section class="contactsBox">
       <div class="container">
-          {% for elem in user %}
-              <a href="#" onclick="javascript:$('#2').show();$('#1').html('{{ elem.realname }}');$('#3').html('昵称：{{ elem.nickname }}');$('#4').html('手机号：{{ elem.phone }}');$('#5').html('邮箱：{{ elem.email }}');$('#6').html('生日：{{ elem.birthday }}');$('#7').html('年龄：{{ elem.age }}');$('#8').html('婚姻状况：{{ elem.marriage }}');$('#9').html('备注：{{ elem.remark }}');">
-                  {{ elem.realname }}
-              </a>
+{#          {% for elem in user %}#}
+{#              <a href="#" onclick="javascript:$('#2').show();$('#1').html('{{ elem.realname }}');$('#3').html('昵称：{{ elem.nickname }}');$('#4').html('手机号：{{ elem.phone }}');$('#5').html('邮箱：{{ elem.email }}');$('#6').html('生日：{{ elem.birthday }}');$('#7').html('年龄：{{ elem.age }}');$('#8').html('婚姻状况：{{ elem.marriage }}');$('#9').html('备注：{{ elem.remark }}');">#}
+{#                  {{ elem.realname }}#}
+{#              </a>#}
 {#              <script type="text/javascript">#}
 {#                 // 获取名字#}
 {#                // 打开cover#}
@@ -337,7 +339,7 @@ body{
 {#                     })#}
 {##}
 {#              </script>#}
-          {% endfor %}
+{#          {% endfor %}#}
       </div>
     </section>
   </div>

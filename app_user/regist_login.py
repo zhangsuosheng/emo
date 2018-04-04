@@ -27,7 +27,7 @@ def regist_view(request):
             email = userform.cleaned_data['email']
             try:
                 # 使用python的elastic包发送请求
-                result=settings.ELASTIC_OPTER.create_user_index('haha')
+                result=settings.ELASTIC_OPTER.create_user_index(username)
                 if result==1:
                     return HttpResponse('用户名只接受小写字母')
                 elif result==2:
@@ -59,8 +59,12 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 if user.is_active:
+                    # request.session['username']=username
                     login(request, user)
-                    return render_to_response('index.html', {'userform': userform})
+                    response = HttpResponseRedirect('/')
+                    # 仅使用了加盐的cookie来保持登陆
+                    response.set_signed_cookie('username', username, expires=3600,salt='abc')
+                    return response
                 else:
                     return HttpResponse('您的账户已被冻结')
             else:
@@ -68,7 +72,6 @@ def login_view(request):
         else:
             return HttpResponse('表单输入不合法')
     else:
-        help(UserForm)
         userform = UserForm()
         del userform.fields['email']
         return render_to_response('login.html',{'userform':userform})

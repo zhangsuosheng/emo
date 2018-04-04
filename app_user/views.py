@@ -2,28 +2,45 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render
 import json
-import datetime
 
 from app_user.models import User,Friends,Remind
 from django.contrib.auth.decorators import login_required
 
+###################
+from django.conf import  settings
 #主页
 @login_required
 def index(request):
-    userid=1
-    user = Friends.objects.filter(usrid=userid)
-    tags = []
-    for elem in user:
-        if elem.tag is None:
-            pass
-        else:
-            for elem2 in elem.tag.split(","):
-                tags.append(elem2)
-    print(tags)
-    tags = list(set(tags))
-    print(tags)
+    # 仅使用了加盐的cookie来保持登陆
+    username=request.get_signed_cookie('username',salt='abc')
+    query_dict={
+        'query':{
+            'match_all':{}
+        }
+    }
+    result=settings.ELASTIC_OPTER.query_friend_docu('haha',query_dict)
 
-    return render(request,"index.html",locals())
+    friends=result['hits']['hits']
+
+    tags=[]
+    for elem_dict in friends:
+        tag_dict=elem_dict['_source']
+        # print(len(elem_dict))
+        for key in tag_dict.keys():
+            if key == "username":
+                pass
+            elif type(tag_dict[key]) is type('str'):
+                tags.append(tag_dict[key])
+            elif type(tag_dict[key]) is type(0):
+                tags.append(key)
+    tags=list(set(tags))
+
+    # print(friends)
+    # print(username)
+    return render(request,"index.html",{'friends':friends,'username':username,'tags':tags})
+
+
+
 #event页
 def event(request):
     userid=1
