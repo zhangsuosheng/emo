@@ -142,3 +142,11 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
           os.path.join(os.path.dirname(__file__), '../static/').replace('\\','/'),
 )
+
+
+FRIENDS_TYPE_NAME='friends'
+FRIEND_ID_NAME='id'
+
+
+from app_user import elastic_opt
+ELASTIC_OPTER=elastic_opt.Elastic_opter(['139.199.32.101'],9200)

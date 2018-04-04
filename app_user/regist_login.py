@@ -9,7 +9,8 @@ from django.contrib.auth import authenticate #django自带登陆
 from django.contrib.auth import login #login向session中添加SESSION_KEY, 便于对用户进行跟踪
 from django.contrib.auth import logout
 
-
+import requests
+from django.conf import settings
 
 # Create your views here.
 class UserForm(forms.Form):
@@ -25,11 +26,24 @@ def regist_view(request):
             password = userform.cleaned_data['password']
             email = userform.cleaned_data['email']
             try:
+                # 使用python的elastic包发送请求
+                result=settings.ELASTIC_OPTER.create_user_index('haha')
+                if result==1:
+                    return HttpResponse('用户名只接受小写字母')
+                elif result==2:
+                    return HttpResponse('该用户名可能已注册，如有疑问联系管理员')
+
+            except Exception as e:
+                print(e)
+                return HttpResponse('elastic search 服务出错，请联系管理员')
+
+            try:
                 user = User.objects.create_user(username=username,password=password,email=email)
+                user.save()
             except Exception:
                 return HttpResponse('该账号已被注册')
-            user.save()
-            return HttpResponse('regist success!!!')
+
+            return HttpResponseRedirect('/')#返回首页
     else:
         userform = UserForm()
     return render_to_response('regist.html',{'userform':userform})
@@ -61,4 +75,4 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/')#返回首页
