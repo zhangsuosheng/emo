@@ -5,47 +5,10 @@ import json
 import datetime
 
 from app_user.models import User,Friends,Remind
-
-# 登陆
-def login(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        password = request.POST.get('password')
-        try:
-            user=User.objects.get(usrname=name)
-            print(user.usrpassword)
-            print(password)
-            if user.usrpassword is password:
-                print("good")
-                response = {'status': '1', 'data': {'userid': user.usrid}}
-                return HttpResponse(json.dumps(response),content_type="application/json")
-            else:
-                response = {'status': '0', 'data': {'error': '密码错误'}}
-                return HttpResponse(json.dumps(response),content_type="application/json")
-        except User.DoesNotExist:
-            response = {'status': '0', 'data': {'error': '找不到用户名'}}
-            return HttpResponse(json.dumps(response), content_type="application/json")
-    else:
-        return HttpResponse(u'请使用POST方法调用该接口')
-
-#注册
-def reg(request):
-    if request.method=="POST":
-        username=request.POST.get('name')
-        userpassword=request.POST.get('password')
-        userphone=request.POST.get('phone')
-        useremail=request.POST.get('email')
-        try:
-            newuser=User.objects.create(usrname=username,usrpassword=userpassword,usrphone=userphone,usremail=useremail)
-            response={'state':'1','user_id':newuser.usrid}
-            return HttpResponse(json.dumps(response),content_type="application/json")
-        except Exception:
-            response={'state':'0'}
-            return HttpResponse(json.dumps(response),content_type="application/json")
-    else:
-        return HttpResponse(u'请使用POST调用该接口')
+from django.contrib.auth.decorators import login_required
 
 #主页
+@login_required
 def index(request):
     userid=1
     user = Friends.objects.filter(usrid=userid)

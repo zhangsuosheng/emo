@@ -6,7 +6,6 @@ class User(models.Model):
     usrid=models.AutoField(unique=True,primary_key=True)#用户id,自增
     usrname=models.CharField(max_length=50,unique=True)#用户名，非空
     usrpassword=models.CharField(max_length=50)#密码，非空
-    usrphone=models.CharField(max_length=50)#手机，非空
     usremail=models.CharField(max_length=50)#邮箱，非空
 
 

@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'app_user.middlewares.decode_post_body',#自定义的中间件，用来处理POST请求
+    # 'app_user.middlewares.decode_post_body',#自定义的中间件，用来处理POST请求
 ]
 
 ROOT_URLCONF = 'emo.urls'
