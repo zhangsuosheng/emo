@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 ###################
 from django.conf import  settings
 #主页
+
 @login_required
 def index(request):
     # 仅使用了加盐的cookie来保持登陆

@@ -162,3 +162,5 @@ ELASTIC_OPTER=elastic_opt.Elastic_opter([ELASTIC_HOST],ELASTIC_PORT)
 COOKIE_SALT='abc'
 
 KEY_OF_FRIEND_NAME='friendname'
+
+# LOGIN_URL='accounts/login/' # 不设置就默认是'accounts/login/'

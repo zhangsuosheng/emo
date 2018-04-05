@@ -60,6 +60,7 @@ def login_view(request):
             if user is not None:
                 if user.is_active:
                     # request.session['username']=username
+                    request.session.set_expiry(0)
                     login(request, user)
                     response = HttpResponseRedirect('/')
                     # 仅使用了加盐的cookie来保持登陆

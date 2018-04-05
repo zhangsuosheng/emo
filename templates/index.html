@@ -384,6 +384,8 @@
             {% for elem in friends %}<a href="">{{ elem }}</a>{% endfor %}
             <button>创建朋友</button>
             <form id="newfriends" action="{% url 'newfriends' %}">
+                <input name="num_tagtext" style="display: none" type="number">
+                <input name="num_tagnum" style="display: none" type="number">
                 <span>朋友姓名：</span>
                 <input name="{{ KEY_OF_FRIEND_NAME }}" type="text">
 
@@ -409,7 +411,10 @@
                     num_num++;
                 });
 
+{#                提交新建好友的表单#}
                 $('#submit_newfriends').click(function (e) {
+                    $.children('input[name="num_tagtext"]').value=num_text;
+                    $.children('input[name="num_tagnum"]').value=num_num;
                     alert('begin!')
                     let f=$('#newfriends')[0];
                     console.log("f",f);
