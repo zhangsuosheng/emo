@@ -4,13 +4,10 @@
 <head>
     <title>人脉</title>
     <meta charset="utf-8">
-    {#    <meta http-equiv="X-UA-Compatible" content="IE=edge">#}
-    {#    <meta name="viewport" content="width=device-width, initial-scale=1">#}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
     <script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
-
 
     <style>
         html {
@@ -22,6 +19,28 @@
             margin: 0;
             height: 100%;
             background-color: #f1f4f5;
+        }
+
+        #newfriends input {
+            border-radius: 5px;
+            padding: 5px 5px 5px 30px;
+            width: 155px;
+            margin: 10px 10px 10px 10px;
+        }
+
+        #pageIndex button {
+            display: inline-block;
+            padding: 8px 24px;
+            font-family: "微软雅黑";
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #32c5d2;
+            border: none;
+            border-radius: 14px;
+            margin: 10px 10px;
         }
 
         #pageIndex header {
@@ -360,162 +379,130 @@
                 </div>
             </div>
             <div class="remarkLine">*注：数字越大代表越重要</div>
+            <p id="all_data" style="display:none;">{{ all_data }}</p>
             <div class="label">标签</div>
             <div class="labelBox">
                 <!--这里不要用静态链接，尽量用带参数的url需要修改一下！！！！！！！-->
                 <h3>所有标签</h3>
-                {% for elem in tags %}<a href="">{{ elem }}</a>{% endfor %}
+                <div id="all_tags"></div>
                 <h3>数值标签</h3>
-                {% for elem in tags_num %}<a href="">{{ elem }}</a>{% endfor %}
+                <div id="num_tags"></div>
                 <h3>文字标签</h3>
-                {% for elem in tags_text %}<a href="">{{ elem }}</a>{% endfor %}
-
-                {#             <script type="text/javascript">#}
-                {#            $(".labelBox a").click(function(){#}
-                {#               $.post("{% url 'userhastag' %}", {#}
-                {#                  tag_list: $(this).html()#}
-                {#               }, function(res){#}
-                {#                  console.log(res);#}
-                {#               })#}
-                {#            })#}
-                {#        </script>#}
+                <div id="text_tags"></div>
             </div>
             <div class="label">朋友</div>
-            {% for elem in friends %}<a href="">{{ elem }}</a>{% endfor %}
-            <button>创建朋友</button>
-            <form id="newfriends" action="{% url 'newfriends' %}">
-                <input name="num_tagtext" style="display: none" type="number">
-                <input name="num_tagnum" style="display: none" type="number">
-                <span>朋友姓名：</span>
-                <input name="{{ KEY_OF_FRIEND_NAME }}" type="text">
+            <div class="labelBox">
+                <h3>所有好友</h3>
+                <div id="all_friends"></div>
+                <h3>创建好友</h3>
 
-            </form>
-            <button type="button" id="submit_newfriends">提交</button>
-
-            <button type="button" id="add_text_label">添加文字标签</button>
-            <button type="button" id="add_num_label">添加数值标签</button>
-            <script>
-                {# 除了名字外标签的个数#}
-                var num_text = 0;
-                var num_num = 0;
-
-                {# 添加文字标签#}
-                $('#add_text_label').click(function (e) {
-                    $('#newfriends').append('<br><span>文字标签内容：</span><input name="'+num_text+'" type="text">');
-                    num_text++;
-                });
-
-                {# 添加数值标签#}
-                $('#add_num_label').click(function (e) {
-                    $('#newfriends').append('<br><span>数值标签名：</span><input name="title'+num_num+'" type="text"><span>数值标签内容：</span><input name="content'+num_num+'" type="number">');
-                    num_num++;
-                });
-
-{#                提交新建好友的表单#}
-                $('#submit_newfriends').click(function (e) {
-                    $.children('input[name="num_tagtext"]').value=num_text;
-                    $.children('input[name="num_tagnum"]').value=num_num;
-                    alert('begin!')
-                    let f=$('#newfriends')[0];
-                    console.log("f",f);
-                    let formData=new FormData(f);
-                    console.log("formData",formData);
-                    $.ajax({
-                        url:"{% url 'newfriends' %}",
-                        type:"POST",
-                        dataType:"json",
-                        cache:false,
-                        data:formData,
-                        contentType:false,
-                        processData:false,
-                        success:function (data) {
-                            $('#newfriends').innerHTML="hello!";
-                            alert('yes');
-                        },
-                        error: function (res) {
-                            alert('no');
-                        }
-                    })
-                })
-            </script>
-        </div>
-    </section>
-    <section class="contactsBox">
-        <div class="container">
-            {#          {% for elem in user %}#}
-            {#              <a href="#" onclick="javascript:$('#2').show();$('#1').html('{{ elem.realname }}');$('#3').html('昵称：{{ elem.nickname }}');$('#4').html('手机号：{{ elem.phone }}');$('#5').html('邮箱：{{ elem.email }}');$('#6').html('生日：{{ elem.birthday }}');$('#7').html('年龄：{{ elem.age }}');$('#8').html('婚姻状况：{{ elem.marriage }}');$('#9').html('备注：{{ elem.remark }}');">#}
-            {#                  {{ elem.realname }}#}
-            {#              </a>#}
-            {#              <script type="text/javascript">#}
-            {#                 // 获取名字#}
-            {#                // 打开cover#}
-            {#                    $("#pageIndex .contactsBox a").click(function () {#}
-            {#    	                    $(".cover").show();#}
-            {#    	                    alert("{{ elem.realname }}")#}
-            {#    	                    $("#1").html("{{ elem.realname }}")#}
-            {#                     })#}
-            {##}
-            {#              </script>#}
-            {#          {% endfor %}#}
+                <form id="newfriends" action="{% url 'newfriends' %}">
+                    <input name="textnum" style="display: none" type="number">
+                    <input name="numnum" style="display: none" type="number">
+                    <span>朋友姓名：</span>
+                    <input name="{{ KEY_OF_FRIEND_NAME }}" type="text">
+                </form>
+                <button type="button" id="add_text_label">添加文字标签</button>
+                <button type="button" id="add_num_label">添加数值标签</button><br>
+                <button type="button" id="submit_newfriends" style="color:#000;padding:8px 100px">提交</button>
+            </div>
         </div>
     </section>
 </div>
-<div class="cover" id="2">
-    <div class="detailBox">
-        <button class="closeBtn">X</button>
-        <div class="mainInfoBox">
-            <img src="{% static 'img/logo2.png' %}">
-            <div class="rightBox">
-                <div id="1">卫晓依</div>
-                <div>重要程度</div>
-                <div class="coverProgress">
-                    <div class="coverProgress_bg">
-                        <div class="coverProgress_bar"></div>
-                    </div>
-                    <div class="coverProgress_btn"></div>
-                    <div class="coverText">0</div>
-                </div>
-            </div>
-        </div>
-        <div class="labelBox">
-            <div class="labelItem">同学
-                <div class="delete">X</div>
-            </div>
-            <div class="labelItem">...
-                <div class="delete">X</div>
-            </div>
-            <div class="labelItem">...
-                <div class="delete">X</div>
-            </div>
-            <div class="labelItem">...
-                <div class="delete">X</div>
-            </div>
-            <div class="labelItem">...
-                <div class="delete">X</div>
-            </div>
-            <div class="addLable"><img src="{% static 'img/Tag-Add.png' %}"></div>
-        </div>
-        <div class="basicInfo">
-            <img src="{% static 'img/change.png' %}">
-            <div>基本信息（涉及短信发送）</div>
-            <ul>
-                <li id="3">昵称</li>
-                <li id="4">手机号</li>
-                <li id="5">邮箱</li>
-                <li id="6">生日</li>
-                <li id="7">年龄</li>
-            </ul>
-        </div>
-        <div class="moreInfo">
-            <img src="{% static 'img/change.png' %}">
-            <div>更多信息</div>
-            <ul>
-                <li id="8">婚姻状况</li>
-                <li id="9">备注</li>
-            </ul>
-        </div>
-    </div>
-</div>
+<script>
+    {# 除了名字外标签的个数#}
+    var num_text = 0;
+    var num_num = 0;
+    {# 添加文字标签#}
+    $('#add_text_label').click(function (e) {
+        $('#newfriends').append('<br><span>文字标签名：</span><input name="texttitle' + num_text + '" type="text"><span>文字标签内容：</span><input name="textcontent' + num_text + '" type="text">');
+        num_text++;
+    });
+    {# 添加数值标签#}
+    $('#add_num_label').click(function (e) {
+        $('#newfriends').append('<br><span>数值标签名：</span><input name="numtitle' + num_num + '" type="text"><span>数值标签内容：</span><input name="numcontent' + num_num + '" type="number">');
+        num_num++;
+    });
+    {#                提交新建好友的表单#}
+    $('#submit_newfriends').click(function (e) {
+        $('#newfriends').children('input[name="textnum"]')[0].value = num_text;
+        $('#newfriends').children('input[name="numnum"]')[0].value = num_num;
+        alert('begin!')
+        let f = $('#newfriends')[0];
+        console.log("f", f);
+        let formData = new FormData(f);
+        console.log("formData", formData);
+        $.ajax({
+            url: "{% url 'newfriends' %}",
+            type: "POST",
+            dataType: "json",
+            cache: false,
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $('#newfriends').innerHTML = "hello!";
+                alert('yes');
+                window.location.href = "/";
+            },
+            error: function (res) {
+                alert('no');
+            }
+        })
+    })
+</script>
+<script>
+    Array.prototype.unique3 = function () {
+        var res = [];
+        var json = {};
+        for (var i = 0; i < this.length; i++) {
+            if (!json[this[i]]) {
+                res.push(this[i]);
+                json[this[i]] = 1;
+            }
+        }
+        return res;
+    }
+    {# 加载标签#}
+    {#                    transform string to list(contain json) in javascript#}
+    var all_data = eval($('#all_data')[0].innerHTML);
+    console.log(all_data);
+
+    var friends = [];
+
+    var tags_text = [];
+    var cur_tags_text = 0;
+    var tags_num = [];
+    var cur_tags_num = 0;
+    for (var i = 0; i < all_data.length; i++) {
+        friends[i] = all_data[i]['{{ KEY_OF_FRIEND_NAME }}'];
+        for (var key in all_data[i]['num']) {
+            tags_num[cur_tags_num] = key;
+            cur_tags_num++;
+        }
+        for (var key in all_data[i]['text']) {
+            tags_text[cur_tags_text] = key;
+            cur_tags_text++;
+        }
+    }
+    tags_num = tags_num.unique3();
+    tags_text = tags_text.unique3();
+    var tags = tags_text.concat(tags_num);
+
+    for (var i = 0; i < friends.length; i++) {
+        $('#all_friends').append('<a href="">' + friends[i] + '</a>');
+    }
+
+    for (var i = 0; i < tags.length; i++) {
+        $('#all_tags').append('<a href="">' + tags[i] + '</a>');
+    }
+    for (var i = 0; i < tags_num.length; i++) {
+        $('#num_tags').append('<a href="">' + tags_num[i] + '</a>')
+    }
+    for (var i = 0; i < tags_text.length; i++) {
+        $('#text_tags').append('<a href="">' + tags_text[i] + '</a>')
+    }
+</script>
 <script>
     $(".labelBox a").click(function () {
         $.post('127.0.0.1/userhastag', {
@@ -526,23 +513,6 @@
             console.log(data)
         })
     })
-    // $.ajax({
-    //   url: 'http://172.16.53.158:8000/alltags
-    //   processData: false,
-    //   type:'get',
-    //   success: function(data){
-    //     // 清空labelBox
-    //     $(".labelBox").remove()
-    //     // 放入<a>标签
-    //     $(".labelBox").append()
-    //     console.log(data);
-    //   },
-    //   error: function(XMLHttpRequest, textStatus, errorThrown) {
-    //     alert(XMLHttpRequest.status);
-    //     alert(XMLHttpRequest.readyState);
-    //     alert(textStatus);
-    //   }
-    // });
 
     // cover获取标签
     // 关闭cover

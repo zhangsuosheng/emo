@@ -164,3 +164,4 @@ COOKIE_SALT='abc'
 KEY_OF_FRIEND_NAME='friendname'
 
 # LOGIN_URL='accounts/login/' # 不设置就默认是'accounts/login/'
+

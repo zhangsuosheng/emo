@@ -22,40 +22,36 @@ def index(request):
     result=settings.ELASTIC_OPTER.query_friend_docu(username,query_dict)
     hits=result['hits']['hits']
 
-    tags=[]
-    tags_num=[]
-    tags_text=[]
-    friends=[]
+    all_data=[]
     for elem_dict in hits:
         tag_dict=elem_dict['_source']
-        # print(len(elem_dict))
-        for key in tag_dict.keys():
-            if key == settings.KEY_OF_FRIEND_NAME:
-                friends.append(tag_dict[key])
-                pass
-            elif type(tag_dict[key]) is type('str'):
-                tags.append(tag_dict[key])
-                tags_text.append(tag_dict[key])
-            elif type(tag_dict[key]) is type(0):
-                tags.append(key)
-                tags_num.append(key)
-    tags=list(set(tags))
-    tags_text=list(set(tags_text))
-    tags_num=list(set(tags_num))
+        all_data.append(tag_dict)
 
-    return render(request,"index.html",{'friends':friends,'username':username,'tags':tags,'tags_num':tags_num,'tags_text':tags_text,'KEY_OF_FRIEND_NAME':settings.KEY_OF_FRIEND_NAME})
+    return render(request,"index.html",{'all_data':all_data,'username':username,'KEY_OF_FRIEND_NAME':settings.KEY_OF_FRIEND_NAME})
 
 @login_required
 def new_friends(request):
     if request.method == 'POST':
         username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
-        help(request)
-        temp=request.POST.get(settings.KEY_OF_FRIEND_NAME)
+
+        textnum=eval(request.POST['textnum'])
+        numnum=eval(request.POST['numnum'])
+        text_dict={}
+        for i in range(0,textnum):
+            text_dict[request.POST['texttitle'+str(i)]]=request.POST['textcontent'+str(i)]
+        num_dict={}
+        for i in range(0,numnum):
+            num_dict[request.POST['numtitle'+str(i)]]=eval(request.POST['numcontent'+str(i)])
+        query_dict={settings.KEY_OF_FRIEND_NAME:request.POST[settings.KEY_OF_FRIEND_NAME],"text":text_dict,"num":num_dict}
+
+        try:
+            settings.ELASTIC_OPTER.insert_friend_docu(username,[query_dict])
+        except Exception as e:
+            print(e)
+            return HttpResponse('elastic search服务出错，请联系管理员')
         result={"status":"111"}
         return HttpResponse(json.dumps(result))
         # return json.dumps(result)
-
-
 
 #event页
 def event(request):
