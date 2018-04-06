@@ -44,7 +44,5 @@ class Elastic_opter():
 
     def query_friend_docu(self,username,query_dict):
         result=self.els_conn.search(index=username,doc_type=settings.FRIENDS_TYPE_NAME,body=query_dict)
-        print(result)
-        print("$$$$$$$$$$$$$$$$$$$$$$")
         # 查询得到的result直接就是dict类型
         return result

@@ -1,27 +1,4 @@
 $(function(){
-	$(".labelBox a").click(function () {
-	    console.log('a')
-        console.log($(this).html())
-    })
-    // $.ajax({
-    //   url: 'http://172.16.53.158:8000/alltags
-    //   processData: false,
-    //   type:'get',
-    //   success: function(data){
-    //     // 清空labelBox
-    //     $(".labelBox").remove()
-    //     // 放入<a>标签
-    //     $(".labelBox").append()
-    //     console.log(data);
-    //   },
-    //   error: function(XMLHttpRequest, textStatus, errorThrown) {
-    //     alert(XMLHttpRequest.status);
-    //     alert(XMLHttpRequest.readyState);
-    //     alert(textStatus);
-    //   }
-    // });
-    // 获取名字
-    // 打开cover
     $("#pageIndex .contactsBox a").click(function () {
     	$(".cover").show();
     })

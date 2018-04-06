@@ -165,3 +165,4 @@ KEY_OF_FRIEND_NAME='friendname'
 
 # LOGIN_URL='accounts/login/' # 不设置就默认是'accounts/login/'
 
+SESSION_COOKIE_AGE=60*30 #session和cookie的过期时间：半小时

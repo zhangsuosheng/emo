@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render
 import json
 
@@ -16,17 +16,22 @@ def index(request):
     username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
     query_dict={
         'query':{
-            'match_all':{}
-        }
+            'match_all':{},
+        },
+        'size': 100,
     }
-    result=settings.ELASTIC_OPTER.query_friend_docu(username,query_dict)
+    try:
+        result=settings.ELASTIC_OPTER.query_friend_docu(username,query_dict)
+    except Exception as e:
+        print(e)
+        return HttpResponse('elastic search 服务器查询出错，请联系管理员')
     hits=result['hits']['hits']
 
     all_data=[]
     for elem_dict in hits:
         tag_dict=elem_dict['_source']
         all_data.append(tag_dict)
-
+    print(all_data)
     return render(request,"index.html",{'all_data':all_data,'username':username,'KEY_OF_FRIEND_NAME':settings.KEY_OF_FRIEND_NAME})
 
 @login_required
@@ -49,10 +54,8 @@ def new_friends(request):
         except Exception as e:
             print(e)
             return HttpResponse('elastic search服务出错，请联系管理员')
-        result={"status":"111"}
-        return HttpResponse(json.dumps(result))
-        # return json.dumps(result)
 
+        return HttpResponseRedirect('/')
 #event页
 def event(request):
     userid=1
