@@ -2,65 +2,57 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render
 import json
-import datetime
 
 from app_user.models import User,Friends,Remind
+from django.contrib.auth.decorators import login_required
 
-# 登陆
-def login(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        password = request.POST.get('password')
-        try:
-            user=User.objects.get(usrname=name)
-            print(user.usrpassword)
-            print(password)
-            if user.usrpassword is password:
-                print("good")
-                response = {'status': '1', 'data': {'userid': user.usrid}}
-                return HttpResponse(json.dumps(response),content_type="application/json")
-            else:
-                response = {'status': '0', 'data': {'error': '密码错误'}}
-                return HttpResponse(json.dumps(response),content_type="application/json")
-        except User.DoesNotExist:
-            response = {'status': '0', 'data': {'error': '找不到用户名'}}
-            return HttpResponse(json.dumps(response), content_type="application/json")
-    else:
-        return HttpResponse(u'请使用POST方法调用该接口')
-
-#注册
-def reg(request):
-    if request.method=="POST":
-        username=request.POST.get('name')
-        userpassword=request.POST.get('password')
-        userphone=request.POST.get('phone')
-        useremail=request.POST.get('email')
-        try:
-            newuser=User.objects.create(usrname=username,usrpassword=userpassword,usrphone=userphone,usremail=useremail)
-            response={'state':'1','user_id':newuser.usrid}
-            return HttpResponse(json.dumps(response),content_type="application/json")
-        except Exception:
-            response={'state':'0'}
-            return HttpResponse(json.dumps(response),content_type="application/json")
-    else:
-        return HttpResponse(u'请使用POST调用该接口')
-
+###################
+from django.conf import  settings
 #主页
-def index(request):
-    userid=1
-    user = Friends.objects.filter(usrid=userid)
-    tags = []
-    for elem in user:
-        if elem.tag is None:
-            pass
-        else:
-            for elem2 in elem.tag.split(","):
-                tags.append(elem2)
-    print(tags)
-    tags = list(set(tags))
-    print(tags)
 
-    return render(request,"index.html",locals())
+@login_required
+def index(request):
+    # 仅使用了加盐的cookie来保持登陆
+    username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
+    query_dict={
+        'query':{
+            'match_all':{}
+        }
+    }
+    result=settings.ELASTIC_OPTER.query_friend_docu(username,query_dict)
+    hits=result['hits']['hits']
+
+    all_data=[]
+    for elem_dict in hits:
+        tag_dict=elem_dict['_source']
+        all_data.append(tag_dict)
+
+    return render(request,"index.html",{'all_data':all_data,'username':username,'KEY_OF_FRIEND_NAME':settings.KEY_OF_FRIEND_NAME})
+
+@login_required
+def new_friends(request):
+    if request.method == 'POST':
+        username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
+
+        textnum=eval(request.POST['textnum'])
+        numnum=eval(request.POST['numnum'])
+        text_dict={}
+        for i in range(0,textnum):
+            text_dict[request.POST['texttitle'+str(i)]]=request.POST['textcontent'+str(i)]
+        num_dict={}
+        for i in range(0,numnum):
+            num_dict[request.POST['numtitle'+str(i)]]=eval(request.POST['numcontent'+str(i)])
+        query_dict={settings.KEY_OF_FRIEND_NAME:request.POST[settings.KEY_OF_FRIEND_NAME],"text":text_dict,"num":num_dict}
+
+        try:
+            settings.ELASTIC_OPTER.insert_friend_docu(username,[query_dict])
+        except Exception as e:
+            print(e)
+            return HttpResponse('elastic search服务出错，请联系管理员')
+        result={"status":"111"}
+        return HttpResponse(json.dumps(result))
+        # return json.dumps(result)
+
 #event页
 def event(request):
     userid=1

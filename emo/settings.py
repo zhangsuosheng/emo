@@ -41,6 +41,15 @@ INSTALLED_APPS = [
     'app_user',
 ]
 
+#elastic search服务位置，目前为单节点
+ELASTIC_HOST='139.199.32.101'
+ELASTIC_PORT=9200
+
+# django项目位置
+HOST='127.0.0.1'
+PORT=8000
+
+
 #在这里定义一下要用的中间件，request从上到下依次经过各个中间件，上面的中间件调用下面的中间件同时把请求发送给下面的中间件
 #一般我们把更加重要的中间件放在上面，例如拦截请求
 MIDDLEWARE = [
@@ -52,7 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'app_user.middlewares.decode_post_body',#自定义的中间件，用来处理POST请求
+    # 'app_user.middlewares.decode_post_body',#自定义的中间件，用来处理POST请求
 ]
 
 ROOT_URLCONF = 'emo.urls'
@@ -83,10 +92,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'emo',
-        'HOST':'127.0.0.1',
+        'HOST':HOST,
         'PORT':'3306',
         'USER':'root',
-        'PASSWORD':'zhangsuosheng',
+        'PASSWORD':'',
         'OPTIONS':{
             'init_command':"SET sql_mode='STRICT_TRANS_TABLES'"
         },
@@ -142,3 +151,17 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
           os.path.join(os.path.dirname(__file__), '../static/').replace('\\','/'),
 )
+
+
+FRIENDS_TYPE_NAME='friends'
+FRIEND_ID_NAME='id'
+
+from app_user import elastic_opt
+ELASTIC_OPTER=elastic_opt.Elastic_opter([ELASTIC_HOST],ELASTIC_PORT)
+
+COOKIE_SALT='abc'
+
+KEY_OF_FRIEND_NAME='friendname'
+
+# LOGIN_URL='accounts/login/' # 不设置就默认是'accounts/login/'
+
