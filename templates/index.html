@@ -28,6 +28,38 @@
             margin: 10px 10px 10px 10px;
         }
 
+        .btn-danger {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+
+            color: #fff;
+            background-color: #d9534f;
+            border-color: #d43f3a;
+        }
+
+        .btn-danger:hover {
+            color: #fff;
+            background-color: #c9302c;
+            border-color: #ac2925;
+        }
+
         #pageIndex button {
             display: inline-block;
             padding: 8px 24px;
@@ -405,7 +437,7 @@
                         <button type="button" id="add_text_label">添加文字标签</button>
                         <button type="button" id="add_num_label">添加数值标签</button>
                         <br>
-                        <button type="submit" id="submit_newfriends" style="color:#000;padding:8px 100px">提交</button>
+                        <button type="submit" id="submit_newfriends" style="padding:8px 100px">提交</button>
                     </form>
                 </div>
             </div>
@@ -425,34 +457,37 @@
     </div>
 </div>
 {##############################################################################}
-<div class="cover" id="friend_detail">
-    <div class="detailBox">
+<div class="cover" id="friend_detail" style="height: auto">
+    <div class="detailBox" style="height: auto;padding: 20px 10px;">
         <button class="closeBtn">X</button>
         <div class="mainInfoBox">
             <img src="{% static 'img/logo2.png' %}">
             <div class="rightBox">
                 <div id="friend_detail_name"></div>
-{#                <div>重要程度</div>#}
-{#                <div class="coverProgress">#}
-{#                    <div class="coverProgress_bg">#}
-{#                        <div class="coverProgress_bar"></div>#}
-{#                    </div>#}
-{#                    <div class="coverProgress_btn"></div>#}
-{#                    <div class="coverText">0</div>#}
-{#                </div>#}
+                <div id="friend_detail_id"></div>
+                {#                <div>重要程度</div>#}
+                {#                <div class="coverProgress">#}
+                {#                    <div class="coverProgress_bg">#}
+                {#                        <div class="coverProgress_bar"></div>#}
+                {#                    </div>#}
+                {#                    <div class="coverProgress_btn"></div>#}
+                {#                    <div class="coverText">0</div>#}
+                {#                </div>#}
             </div>
+
         </div>
         <div id="friend_detail_taglist" class="labelBox">
         </div>
         <div class="addLable"><img src="{% static 'img/Tag-Add.png' %}"></div>
+        <div style="text-align: center"><button class="btn-danger" style="padding: 6px 80px;">删除该朋友</button></div>
     </div>
 </div>
 {##############################################################################}
 {##############################################################################}
-{##############################################################################}
+{####添加好友面板js#############################################}
 <script>
-    {# 除了名字外标签的个数#}
     var num_text = 0;
+    {#计数#}
     var num_num = 0;
     {# 添加文字标签#}
     $('#add_text_label').click(function (e) {
@@ -470,75 +505,64 @@
         $('#newfriends').children('input[name="numnum"]')[0].value = num_num;
     })
 </script>
+{############################################################################}
+{############################################################################}
+{##显示label js############}
 <script>
-    Array.prototype.unique3 = function () {
-        var res = [];
-        var json = {};
-        for (var i = 0; i < this.length; i++) {
-            if (!json[this[i]]) {
-                res.push(this[i]);
-                json[this[i]] = 1;
-            }
-        }
-        return res;
-    }
-    {# 加载标签#}
-    {#                    transform string to list(contain json) in javascript#}
-    var all_data = eval($('#all_data')[0].innerHTML);
-    console.log(all_data);
+    var all_data = eval('('+$('#all_data')[0].innerHTML+')');
 
-    var friends = [];
-    var tags_text = {};
-{#    var cur_tags_text = 0;#}
+    var tags_text = {};//存储标签：有该标签的用户的id的list
     var tags_num = {};
-{#    var cur_tags_num = 0;#}
-
-    var friends_detail={};
-    var tags_detail=[];
 
 
-    for (var i = 0; i < all_data.length; i++) {
-
-        friends[i] = all_data[i]['{{ KEY_OF_FRIEND_NAME }}'];
-        friends_detail[friends[i]]=all_data[i];
-
-        for (var key in all_data[i]['num']) {
-            if(key in tags_num){
-                tags_num[key].push(friends[i]);
-            }else{
-                tags_num[key]=[friends[i]];
+    for (id in all_data) {
+        for (var key in all_data[id]['num']) {
+            if (key in tags_num) {
+                tags_num[key].push(id);
+            } else {
+                tags_num[key] = [id];
             }
-
         }
-        for (var key in all_data[i]['text']) {
-            if(key in tags_text){
-                tags_text[key].push(friends[i]);
-            }else{
-                tags_text[key]=[friends[i]];
+        for (var key in all_data[id]['text']) {
+            if (key in tags_text) {
+                tags_text[key].push(id);
+            } else {
+                tags_text[key] = [id];
             }
         }
     }
-    for (var i = 0; i < friends.length; i++) {
-        $('#all_friends').append('<a name="'+friends_detail[i]+'" onclick="showFriendsDetail(this,event)">' + friends[i] + '</a>');
+    console.log(tags_text);
+    console.log(tags_num);
+    for (id in all_data) {
+        $('#all_friends').append('<a name="' + all_data[id] + '" onclick="showFriendsDetail(this,event,\''+id+'\')">' + all_data[id]['{{ KEY_OF_FRIEND_NAME }}'] + '</a>');
     }
 
-    for(key in tags_num){
-        $('#num_tags').append('<a name="'+tags_num[key]+'" onclick="showTagsDetail(this,event)">' + key + '</a>');
-        $('#all_tags').append('<a name="'+tags_num[key]+'" onclick="showTagsDetail(this,event)">' + key + '</a>');
+    for (key in tags_num) {
+        $('#num_tags').append('<a name="' + tags_num[key] + '" onclick="showTagsDetail(this,event)">' + key + '</a>');
+        console.log(tags_num[key]);
+        console.log('added');
+        $('#all_tags').append('<a name="' + tags_num[key] + '" onclick="showTagsDetail(this,event)">' + key + '</a>');
     }
-    for(key in tags_text){
-        $('#text_tags').append('<a name="'+tags_text[key]+'" onclick="showTagsDetail(this,event)">' + key + '</a>');
-        $('#all_tags').append('<a name="'+tags_text[key]+'" onclick="showTagsDetail(this,event)">' + key + '</a>');
+    for (key in tags_text) {
+        $('#text_tags').append('<a name="' + tags_text[key] + '" onclick="showTagsDetail(this,event)">' + key + '</a>');
+        $('#all_tags').append('<a name="' + tags_text[key] + '" onclick="showTagsDetail(this,event)">' + key + '</a>');
     }
 
 </script>
+{############################################################################}
+{############################################################################}
+{##详细信息cover的关闭&滑动块特效######}
 <script>
-
-    // cover获取标签
     // 关闭cover
     $(".cover .closeBtn").click(function () {
         $(".cover").hide();
+        {#        console.log(this);#}
+        {#        console.log(typeof this);#}
+        {#        this.style.visibility='hidden';#}
+        {#        this.style.display='none';#}
+        {#        this.hide();#}
     })
+
     // 滑动块start
     var tag1 = false, ox1 = 0, left1 = 0, bgleft1 = 0;
     var tag2 = false, ox2 = 0, left2 = 0, bgleft2 = 0;
@@ -615,28 +639,34 @@
         }
     });
 </script>
+{############################################################################}
+{############################################################################}
+{####详细信息面板信息加载###############}
 <script>
-    function showTagsDetail(obj,event) {
+    function showTagsDetail(obj, event) {
         $('#tag_detail_namelist').empty();
         $('#tag_detail').show();
-        let namelist=obj.name.split(",");
-        $('#tag_detail_tagname').html("拥有"+obj.innerHTML+"标签的朋友");
-        for(let i=0;i<namelist.length;i++){
-            $('#tag_detail_namelist').append('<div class="labelItem">'+namelist[i]+'<div class="delete">X</div></div>')
+        let namelist = obj.name.split(",");
+        console.log(namelist);
+        $('#tag_detail_tagname').html("拥有" + obj.innerHTML + "标签的朋友");
+        for (let i = 0; i < namelist.length; i++) {
+            $('#tag_detail_namelist').append('<div class="labelItem" onclick="showFriendsDetail(this,event,\'' + namelist[i] + '\')">' + all_data[namelist[i]]['{{ KEY_OF_FRIEND_NAME }}'] + '</div>')
         }
     }
-    function showFriendsDetail(obj,event) {
+    function showFriendsDetail(obj, event,id) {
         $('#friend_detail_taglist').empty();
         $('#friend_detail').show();
-        let tagdict=friends_detail[obj.innerHTML];
-        let numdict=tagdict['num'];
-        let textdict=tagdict['text'];
-        $('#friend_detail_name').html(obj.innerHTML);
-        for(key in numdict){
-            $('#friend_detail_taglist').append('<div class="labelItem">标签：'+key+'&nbsp;&nbsp;&nbsp;&nbsp;值：'+numdict[key]+'<div class="delete">X</div></div>')
+        let tagdict = all_data[id];
+        let friendname=tagdict['{{ KEY_OF_FRIEND_NAME }}'];
+        let numdict = tagdict['num'];
+        let textdict = tagdict['text'];
+        $('#friend_detail_name').html(friendname);
+        $('#friend_detail_id').html("朋友id："+id);
+        for (key in numdict) {
+            $('#friend_detail_taglist').append('<div class="labelItem">标签：' + key + '&nbsp;&nbsp;&nbsp;&nbsp;值：' + numdict[key] + '<div class="delete">X</div></div>')
         }
-        for(key in textdict){
-            $('#friend_detail_taglist').append('<div class="labelItem">标签：'+key+'&nbsp;&nbsp;&nbsp;&nbsp;值：'+textdict[key]+'<div class="delete">X</div></div>')
+        for (key in textdict) {
+            $('#friend_detail_taglist').append('<div class="labelItem">标签：' + key + '&nbsp;&nbsp;&nbsp;&nbsp;值：' + textdict[key] + '<div class="delete">X</div></div>')
         }
     }
 </script>
