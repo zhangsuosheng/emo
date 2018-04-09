@@ -64,7 +64,7 @@ def login_view(request):
                     login(request, user)
                     response = HttpResponseRedirect('/')
                     # 仅使用了加盐的cookie来保持登陆
-                    response.set_signed_cookie('username', username, expires=3600,salt=settings.COOKIE_SALT)
+                    response.set_signed_cookie('username', username,salt=settings.COOKIE_SALT,expires=settings.SESSION_COOKIE_AGE)
                     return response
                 else:
                     return HttpResponse('您的账户已被冻结')
