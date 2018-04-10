@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^accounts/logout/$', regist_login.logout_view, name="logout"),
     url(r'^$',views.index,name="index"),
     url(r'^newfriends/$',views.new_friends,name="newfriends"),
+    url(r'^searchbytag/$',views.search_by_tag,name="searchbytag"),
 
     url(r'^event/$',views.event,name="event"),
 
