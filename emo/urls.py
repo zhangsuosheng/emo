@@ -18,32 +18,29 @@ from django.contrib import admin
 
 from django.contrib import auth
 
-from app_user import views,views2,views3,views4,views5,regist_login
+from app_user import views, regist_login
 from app_user import tests
 
 from django.conf import settings
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls,name="admin"),
-    url(r'^test/$',tests.test1,name="test"),
-    url(r'^accounts/login/$',regist_login.login_view,name="login"),
-    url(r'^accounts/regist/$',regist_login.regist_view,name="regist"),
+    url(r'^admin/', admin.site.urls, name="admin"),
+    url(r'^test/$', tests.test1, name="test"),
+    url(r'^accounts/login/$', regist_login.login_view, name="login"),
+    url(r'^accounts/regist/$', regist_login.regist_view, name="regist"),
     url(r'^accounts/logout/$', regist_login.logout_view, name="logout"),
-    url(r'^$',views.index,name="index"),
-    url(r'^newfriends/$',views.new_friends,name="newfriends"),
-    url(r'^searchbytag/$',views.search_by_tag,name="searchbytag"),
 
-    url(r'^event/$',views.event,name="event"),
+    url(r'^$', views.index, name="index"),
+    url(r'^newfriends/$', views.new_friends, name="newfriends"),
 
-    url(r'^remind/$',views.remind,name="remind"),
-    url(r'^friend/$',views.friend,name="friend"),
-    url(r'^onefriend/$',views2.onefriend,name="onefriend"),
-    url(r'^friendlist/$',views2.friendlist,name="friendlist"),
-    url(r'^alltags/$',views3.alltags,name="alltags"),
-    url(r'^userhastag/$',views3.userhastag,name="userhastag"),
-    url(r'^modify_friend/$',views4.modify_friend,name="modify_friend"),
-    url(r'^new_friend/$',views4.new_friend,name="new_friend"),
-    url(r'^getbyface/$',views5.getbyface,name="getbyface"),
-    url(r'^userhastag2/(.+)/$', views3.userhastag2, name="userhastag2"),
+    # 搜索
+    url(r'^searchbytag/$', views.search_by_tag, name="searchbytag"),
+    url(r'^searchbyfeature_text/$', views.search_by_feature_text, name="searchbyfeature_text"),
+    url(r'^searchbyfeature_num_or_date/$', views.search_by_feature_num_or_date, name="searchbyfeature_num_or_date"),
+
+    url(r'^gettypes/$', views.get_types, name="gettypes"),
+
+    url(r'^event/$', views.event, name="event"),
+
 
 ]

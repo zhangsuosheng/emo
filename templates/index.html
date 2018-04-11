@@ -8,378 +8,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
     <script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
-
-    <style>
-        html {
-            font-family: "微软雅黑";
-            height: 100%;
-        }
-
-        body {
-            margin: 0;
-            height: 100%;
-            background-color: #f1f4f5;
-        }
-
-        #newfriends input {
-            border-radius: 5px;
-            padding: 5px 5px 5px 30px;
-            width: 155px;
-            margin: 10px 10px 10px 10px;
-        }
-
-        .btn-danger {
-            display: inline-block;
-            padding: 6px 12px;
-            margin-bottom: 0;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 1.42857143;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: middle;
-            -ms-touch-action: manipulation;
-            touch-action: manipulation;
-            cursor: pointer;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            background-image: none;
-            border: 1px solid transparent;
-            border-radius: 4px;
-
-            color: #fff;
-            background-color: #d9534f;
-            border-color: #d43f3a;
-        }
-
-        .btn-danger:hover {
-            color: #fff;
-            background-color: #c9302c;
-            border-color: #ac2925;
-        }
-
-        #pageIndex button {
-            display: inline-block;
-            padding: 8px 24px;
-            font-family: "微软雅黑";
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            outline: none;
-            color: #fff;
-            background-color: #32c5d2;
-            border: none;
-            border-radius: 14px;
-            margin: 10px 10px;
-        }
-
-        #pageIndex header {
-            text-align: center;
-            background-color: #fff;
-            height: 88px;
-        }
-
-        #pageIndex .container {
-            min-width: 1200px;
-            display: inline-block;
-        }
-
-        #pageIndex header img {
-            height: 40px;
-            float: left;
-            padding: 24px 50px 24px 0;
-        }
-
-        #pageIndex header ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        #pageIndex header li {
-            float: left;
-            margin: 0 24px;
-            line-height: 40px;
-        }
-
-        #pageIndex header a {
-            display: block;
-            padding: 24px 18px;
-            font-size: 18px;
-            color: #333;
-            text-decoration: none;
-        }
-
-        #pageIndex header li:nth-child(1) {
-            border-bottom: 4px solid #26c6d3;
-        }
-
-        #pageIndex header li:nth-child(1) a {
-            font-weight: bolder;
-            color: #26c6d4;
-        }
-
-        #pageIndex header a.logOut {
-            float: right;
-            color: #26c6d4;
-            font-size: 16px;
-            display: inline-block;
-            padding: 12px 20px;
-            margin-top: 20px;
-            border: 1px solid #26c6d4;
-            border-radius: 25px;
-        }
-
-        #pageIndex header li:hover, #pageIndex header a:hover {
-            background-color: #eee;
-        }
-
-        #pageIndex section.selectBox {
-            text-align: center;
-        }
-
-        #pageIndex section.selectBox .label {
-            margin: 30px 0 10px 24px;
-            text-align: left;
-            font-weight: bold;
-            font-size: 18px;
-            color: #32c5d2;
-            border-left: 4px solid #32c5d2;
-            padding-left: 14px;
-        }
-
-        #pageIndex section.selectBox .remarkLine {
-            color: #32c5d2;
-            text-align: left;
-            font-size: 16px;
-            padding: 0 36px;
-        }
-
-        #pageIndex section.selectBox .labelBox {
-            text-align: left;
-            padding: 0 40px;
-            max-width: 1200px;
-        }
-
-        #pageIndex section.selectBox .labelBox a, #pageIndex .contactsBox a {
-            display: inline-block;
-            background-color: #32c5d2;
-            color: #fff;
-            text-decoration: none;
-            padding: 8px 24px;
-            border-radius: 14px;
-            margin: 9px 16px;
-        }
-
-        #pageIndex section.selectBox .progress {
-            position: relative;
-            width: 400px;
-            margin: 10px 46px 25px;
-        }
-
-        .progress_bg {
-            height: 8px;
-            border-radius: 2px;
-            overflow: hidden;
-            background-color: #fff;
-        }
-
-        .progress_bar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            background: #51ced9;
-            width: 0;
-            height: 8px;
-            border-radius: 2px;
-        }
-
-        .progress_Left, .progress_Right {
-            position: absolute;
-            left: 0px;
-            top: -2px;
-            margin-left: -6px;
-        }
-
-        .progress_btn {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: #32c5d2;
-            cursor: pointer;
-            border: 3px #3598dc solid;
-            box-sizing: border-box;
-        }
-
-        .textRight, .textLeft {
-            color: #adadae;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
-        .textRight {
-            float: right;
-        }
-
-        .textLeft {
-            float: left;
-        }
-
-        #pageIndex .contactsBox {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        #pageIndex .contactsBox .container {
-            text-align: left;
-            width: 1200px;
-        }
-
-        .cover {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            color: #333;
-            display: none;
-        }
-
-        .cover .detailBox {
-            width: 400px;
-            height: 500px;
-            margin: 70px auto;
-            border: 1px solid #26c6d3;
-            border-radius: 2px;
-            background-color: #fff;
-            overflow: auto;
-        }
-
-        .cover .closeBtn {
-            float: right;
-            border: none;
-            background: none;
-            margin: 10px;
-            cursor: pointer;
-        }
-
-        .cover .mainInfoBox img {
-            float: left;
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            margin: 0 20px;
-        }
-
-        .cover .mainInfoBox .rightBox > div:nth-child(1) {
-            margin: 20px 0 5px 0;
-            font-weight: bold;
-            font-size: 24px;
-        }
-
-        .coverProgress {
-            position: relative;
-            width: 150px;
-            margin: 10px 46px 25px 135px;
-        }
-
-        .coverProgress_bg {
-            height: 4px;
-            overflow: hidden;
-            background-color: #eee;
-        }
-
-        .coverProgress_bar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            background: #51ced9;
-            width: 0;
-            height: 4px;
-        }
-
-        .coverProgress_btn {
-            position: absolute;
-            left: 0px;
-            top: -3px;
-            margin-left: -5px;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: #32c5d2;
-            cursor: pointer;
-            border: 1px #eee solid;
-            box-sizing: border-box;
-        }
-
-        .coverText {
-            color: #adadae;
-            font-size: 14px;
-            margin-top: 5px;
-            position: absolute;
-            top: -12px;
-            right: -30px;
-        }
-
-        .cover .labelBox {
-            margin: 15px 20px;
-            color: #fff;
-        }
-
-        .cover .labelItem {
-            display: inline-block;
-            background-color: #32c5d2;
-            border-radius: 2px;
-            padding: 6px 8px;
-            margin: 6px;
-        }
-
-        .cover .addLable {
-            margin: 6px 8px;
-            cursor: pointer;
-        }
-
-        .cover .delete {
-            float: right;
-            font-size: 12px;
-            margin: -5px -5px 5px 5px;
-            color: #32c5d2;
-            cursor: pointer;
-        }
-
-        .cover .delete:hover {
-            color: #fff;
-        }
-
-        .cover .basicInfo > div, .moreInfo > div {
-            font-weight: bold;
-            font-size: 16px;
-            margin: 10px 20px;
-
-        }
-
-        .cover .basicInfo > ul, .moreInfo > ul {
-            list-style: none;
-            margin: 0;
-            padding-left: 40px;
-        }
-
-        .cover .basicInfo li, .moreInfo li {
-            margin: 3px 0;
-        }
-
-        .cover .basicInfo img, .moreInfo img {
-            float: right;
-            margin: 5px 30px;
-            cursor: pointer;
-        }
-
-        body {
-            padding: 0;
-        }
-    </style>
 </head>
 <body>
 <div id="pageIndex">
@@ -418,57 +46,130 @@
                 <h3>所有标签</h3>
                 <div id="all_tags"></div>
 
-                <div id="" style="margin: 20px 20px;border-style: inset;display: inline-block;padding: 10px 10px;">
+                <div class="table_fillin" id="">
                     <p>根据标签搜索</p>
                     <form id="" action="{% url 'newfriends' %}" method="post" style="display: inline-block">
                         <span>关键词：</span>
                         <input id="searchbytagkeyword" type="text" style="margin: 10px 10px;" required><br>
-                        <button id="searchbytagbutton" type="button">开始</button>
-                        <input id="searchbytagfuzzy" type="checkbox" ><span>模糊搜索</span>
-
+                        <button id="searchbytagbutton" type="button" style="padding:8px 50px">开始</button>
+                        <input id="searchbytagfuzzy" type="checkbox"
+                               style="border-radius: 5px;padding: 10px 10px;width: auto;margin: 10px 10px;"><span>模糊搜索</span>
                         <div id="searchbytagresult"></div>
-                        <script type="text/javascript">
-                            $('#searchbytagbutton').click(function (e) {
-                                console.log('begin')
-                                $.ajax({
-                                    url: "{% url 'searchbytag' %}",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data:{
-                                        keyword:$('#searchbytagkeyword')[0].value,
-                                        fuzzy:$('#searchbytagfuzzy')[0].checked,
-                                    },
-                                    success: function (data) {
-                                        $('#searchbytagresult').empty();
-                                        $('#searchbytagresult').append('<p>搜索结果:<\p>');
-                                        let fuzzy=data['fuzzy'];
-                                        data=data['result_id'];
-                                        for(let i=0;i<data.length;i++){
-                                            if(i!=0)$('#searchbytagresult').append('<br>');
-                                            $('#searchbytagresult').append('<a name="' + data[i][0] + '" onclick="showFriendsDetail(this,event,\'' + data[i][0] + '\')">' + all_data[data[i][0]]["{{ KEY_OF_FRIEND_NAME }}"] + '</a>');
-                                            if(fuzzy)$('#searchbytagresult').append('<span>匹配度：'+data[i][1]+'</span>')
-                                        }
-                                        alert('yes');
-                                    },
-                                    error: function (res) {
-{#                                        console.log(res);#}
-                                        $('#searchbytagresult').empty();
-                                        $('#searchbytagresult').append('<p>搜索结果:<\p>');
-                                        alert('no');
-                                    }
-                                })
-                            })
-                        </script>
                     </form>
                 </div>
+
                 <h3>所有属性</h3>
                 <div id="all_features"></div>
-                <div id="" style="margin: 20px 20px;border-style: inset;display: inline-block;padding: 10px 10px;">
+
+                <div class="table_fillin" id="">
                     <p>根据属性筛选</p>
                     <form id="" action="{% url 'newfriends' %}" method="post" style="display: inline-block">
-                        <span>关键词：</span>
-                        <input name="" type="text" required>
-                        <button type="button" id="">开始</button>
+                        <span>选择属性：</span>
+                        <select id="searchbyfeatureselect">
+                        </select>
+                        <div id="searchbyfeaturefillin">
+                        </div>
+                        <button type="button" id="searchbyfeaturebutton" style="padding:8px 50px">开始</button>
+                        <div id="searchbyfeatureresult"></div>
+                        <script>
+                            $('#searchbyfeatureselect').change(function (e) {
+                                let featuretype = $('#searchbyfeatureselect').find('option:selected').attr('name');
+                                let featurevalue = $('#searchbyfeatureselect').find('option:selected')[0].value;
+                                $('#searchbyfeaturefillin').empty();
+                                if (featuretype == "num") {
+                                    $('#searchbyfeaturefillin').append('<br><span>下限：</span><input id="searchbyfeature_num_bottom" type="number" required>');
+                                    $('#searchbyfeaturefillin').append('<br><span>上限：</span><input id="searchbyfeature_num_top" type="number" required>');
+                                } else if (featuretype == "text") {
+                                    $('#searchbyfeaturefillin').append('<br><span>关键词：</span><input id="searchbyfeature_text" type="text" required>');
+                                } else if (featuretype == "date") {
+                                    $('#searchbyfeaturefillin').append('<br><span>下限：</span><input id="searchbyfeature_date_bottom" type="date" required>');
+                                    $('#searchbyfeaturefillin').append('<br><span>上限：</span><input id="searchbyfeature_date_top" type="date" required>');
+                                }
+                            });
+                            $('#searchbyfeaturebutton').click(function (e) {
+                                let featuretype = $('#searchbyfeatureselect').find('option:selected').attr('name');
+                                let featurevalue = $('#searchbyfeatureselect').find('option:selected')[0].value;
+
+                                if (featuretype == "text") {
+                                    $.ajax({
+                                        url: "{% url 'searchbyfeature_text' %}",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: {
+                                            featurevalue: featurevalue,
+                                            keyword: $('#searchbyfeature_text')[0].value
+                                        },
+                                        success: function (data) {
+                                            $('#searchbyfeatureresult').empty();
+                                            $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
+                                            for (let i = 0; i < data.length; i++) {
+                                                $('#searchbyfeatureresult').append('<a name="' + data[i] + '" onclick="showFriendsDetail(this,event,\'' + data[i] + '\')">' + all_data[data[i]]["{{ KEY_OF_FRIEND_NAME }}"] + '</a>');
+                                            }
+                                        },
+                                        error: function (res) {
+                                            $('#searchbyfeatureresult').empty();
+                                            $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
+                                            alert("{{ ELASTIC_ERROR_MESSAGE }}");
+                                        }
+
+                                    });
+                                }
+
+
+                                else if (featuretype == "num") {
+                                    $.ajax({
+                                        url: "{% url 'searchbyfeature_num_or_date' %}",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: {
+                                            featurevalue: featurevalue,
+                                            bottom: $('#searchbyfeature_num_bottom')[0].value,
+                                            top: $('#searchbyfeature_num_top')[0].value,
+                                        },
+                                        success: function (data) {
+                                            $('#searchbyfeatureresult').empty();
+                                            $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
+                                            for (let i = 0; i < data.length; i++) {
+                                                $('#searchbyfeatureresult').append('<a name="' + data[i] + '" onclick="showFriendsDetail(this,event,\'' + data[i] + '\')">' + all_data[data[i]]["{{ KEY_OF_FRIEND_NAME }}"] + '</a>');
+                                            }
+                                        },
+                                        error: function (res) {
+                                            $('#searchbyfeatureresult').empty();
+                                            $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
+                                            alert("{{ ELASTIC_ERROR_MESSAGE }}");
+                                        }
+
+                                    });
+                                }
+
+
+                                else if (featuretype == "date") {
+                                    $.ajax({
+                                        url: "{% url 'searchbyfeature_num_or_date' %}",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: {
+                                            featurevalue: featurevalue,
+                                            bottom: $('#searchbyfeature_date_bottom')[0].value,
+                                            top: $('#searchbyfeature_date_top')[0].value,
+                                        },
+                                        success: function (data) {
+                                            $('#searchbyfeatureresult').empty();
+                                            $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
+                                            for (let i = 0; i < data.length; i++) {
+                                                $('#searchbyfeatureresult').append('<a name="' + data[i] + '" onclick="showFriendsDetail(this,event,\'' + data[i] + '\')">' + all_data[data[i]]["{{ KEY_OF_FRIEND_NAME }}"] + '</a>');
+                                            }
+                                        },
+                                        error: function (res) {
+                                            $('#searchbyfeatureresult').empty();
+                                            $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
+                                            alert("{{ ELASTIC_ERROR_MESSAGE }}");
+                                        }
+
+                                    });
+                                }
+                            });
+                        </script>
                     </form>
                 </div>
             </div>
@@ -478,10 +179,12 @@
                 <div id="all_friends"></div>
                 <h3>创建朋友</h3>
                 <div id="newfriendsdiv" style="display: inline-block;padding: 10px 10px;">
-                    <form id="newfriends" action="{% url 'newfriends' %}" method="post" style="display: inline-block">
+                    <form class="table_fillin" id="newfriends" action="{% url 'newfriends' %}" method="post"
+                          style="display: inline-block">
                         {#                        {% csrf_token %}#}
                         <span>朋友姓名：</span>
                         <input name="{{ KEY_OF_FRIEND_NAME }}" type="text" required>
+                        <br>
                         <button type="button" id="add_tag">添加标签</button>
                         <br><span>数值属性名：</span><input name="numtitle0" type="text" value="重要度" required readonly><span>数值属性内容：</span><input
                             name="numcontent0" type="number" required>
@@ -515,18 +218,7 @@
         <div class="mainInfoBox">
             <img src="{% static 'img/logo2.png' %}">
             <div class="rightBox" id="friend_detail_features">
-                {#                <div id="friend_detail_name"></div>#}
-                {#                <div id="friend_detail_id"></div>#}
-                {#                <div>重要程度</div>#}
-                {#                <div class="coverProgress">#}
-                {#                    <div class="coverProgress_bg">#}
-                {#                        <div class="coverProgress_bar"></div>#}
-                {#                    </div>#}
-                {#                    <div class="coverProgress_btn"></div>#}
-                {#                    <div class="coverText">0</div>#}
-                {#                </div>#}
             </div>
-
         </div>
         <div id="friend_detail_taglist" class="labelBox">
         </div>
@@ -556,6 +248,7 @@
         $('#add_text_label').before('<br><span>文字属性名：</span><input name="texttitle' + num_text + '" type="text" required><span>文字属性内容：</span><input name="textcontent' + num_text + '" type="text" required>');
         num_text++;
     });
+
     {# 添加数值属性#}
     $('#add_num_label').click(function (e) {
         $('#add_text_label').before('<br><span>数值属性名：</span><input name="numtitle' + num_num + '" type="text" required><span>数值属性内容：</span><input name="numcontent' + num_num + '" type="number" required>');
@@ -608,10 +301,7 @@
             features.push(feature);
         }
     }
-    features.unique3();
-    console.log(tags);
-    console.log(features);
-
+    features = features.unique3();
     for (id in all_data) {
         $('#all_friends').append('<a name="' + all_data[id] + '" onclick="showFriendsDetail(this,event,\'' + id + '\')">' + all_data[id]['{{ KEY_OF_FRIEND_NAME }}'] + '</a>');
     }
@@ -619,10 +309,29 @@
     for (key in tags) {
         $('#all_tags').append('<a name="' + tags[key] + '" onclick="showTagsDetail(this,event)">' + key + '</a>');
     }
-    for (let i = 0; i < features.length; i++) {
-        if (features[i] == "标签")continue;
-        $('#all_features').append('<a name="' + features[i] + '" onclick="filterByFeature(this,event)">' + features[i] + '</a>');
+
+    console.log(features);
+    for (let i=0;i<features.length;i++) {
+        if(features[i]=="标签")continue;
+        $('#all_features').append('<a name="' + features[i] + '" onclick="">' + features[i] + '</a>');
     }
+
+    $.ajax({
+        url: "{% url 'gettypes' %}",
+        type: "GET",
+        success: function (data) {
+            console.log('data', data);
+            data = eval('(' + data + ')');
+            $('#searchbyfeatureselect').append('<option  name="none">——请选择——</option>')
+            for (feature in data) {
+                $('#searchbyfeatureselect').append('<option  name="' + data[feature] + '">' + feature + '</option>')
+            }
+        },
+        error: function (res) {
+            console.log(res);
+            alert("{{ ELASTIC_ERROR_MESSAGE }}");
+        }
+    })
 
 </script>
 {############################################################################}
@@ -723,7 +432,6 @@
         $('#tag_detail_namelist').empty();
         $('#tag_detail').show();
         let namelist = obj.name.split(",");
-        console.log(namelist);
         $('#tag_detail_tagname').html("拥有" + obj.innerHTML + "标签的朋友");
         for (let i = 0; i < namelist.length; i++) {
             $('#tag_detail_namelist').append('<div class="labelItem" onclick="showFriendsDetail(this,event,\'' + namelist[i] + '\')">' + all_data[namelist[i]]['{{ KEY_OF_FRIEND_NAME }}'] + '</div>')
@@ -734,8 +442,6 @@
         $('#friend_detail_taglist').empty();
         $('#friend_detail').show();
         let frienddetail = all_data[id];
-        console.log("wow:")
-        console.log(frienddetail)
         $('#friend_detail_features').append('<div name="' + id + '">' + frienddetail["{{ KEY_OF_FRIEND_NAME }}"] + '</div>')
 
         for (key in frienddetail) {
@@ -750,6 +456,41 @@
     function filterByFeature() {
 
     }
+</script>
+{############################################################################}
+{############################################################################}
+{####搜索###############}
+<script type="text/javascript">
+    $('#searchbytagbutton').click(function (e) {
+        $.ajax({
+            url: "{% url 'searchbytag' %}",
+            type: "POST",
+            dataType: "json",
+            data: {
+                keyword: $('#searchbytagkeyword')[0].value,
+                fuzzy: $('#searchbytagfuzzy')[0].checked,
+            },
+            success: function (data) {
+                $('#searchbytagresult').empty();
+                $('#searchbytagresult').append('<p>搜索结果:<\p>');
+                let fuzzy = data['fuzzy'];
+                data = data['result_id'];
+                for (let i = 0; i < data.length; i++) {
+                    if (i != 0) $('#searchbytagresult').append('<br>');
+                    $('#searchbytagresult').append('<a name="' + data[i][0] + '" onclick="showFriendsDetail(this,event,\'' + data[i][0] + '\')">' + all_data[data[i][0]]["{{ KEY_OF_FRIEND_NAME }}"] + '</a>');
+                    if (fuzzy) $('#searchbytagresult').append('<span>匹配度：' + data[i][1] + '</span>')
+                }
+                alert('yes');
+            },
+            error: function (res) {
+                $('#searchbytagresult').empty();
+                $('#searchbytagresult').append('<p>搜索结果:<\p>');
+                alert("{{ ELASTIC_ERROR_MESSAGE }}");
+            }
+        })
+    })
+
+
 </script>
 </body>
 </html>
