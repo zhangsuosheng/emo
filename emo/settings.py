@@ -147,22 +147,27 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # APPEND_SLASH=False
-
-STATICFILES_DIRS = (
-          os.path.join(os.path.dirname(__file__), '../static/').replace('\\','/'),
-)
+# STATICFILES_DIRS = (
+#           os.path.join(os.path.dirname(__file__), '../static/').replace('\\','/'),
+# )
 
 
 FRIENDS_TYPE_NAME='friends'
 FRIEND_ID_NAME='id'
+
+MESSAGE_TYPE_NAME='messages'
+
+FEATURES_TYPE_MESSAGE_ID=1
 
 from app_user import elastic_opt
 ELASTIC_OPTER=elastic_opt.Elastic_opter([ELASTIC_HOST],ELASTIC_PORT)
 
 COOKIE_SALT='abc'
 
-KEY_OF_FRIEND_NAME='friendname'
+KEY_OF_FRIEND_NAME='朋友姓名'
 
 # LOGIN_URL='accounts/login/' # 不设置就默认是'accounts/login/'
 
 SESSION_COOKIE_AGE=60*30 #session和cookie的过期时间：半小时
+
+ELASTIC_ERROR_MESSAGE="elastic search服务出错，请联系管理员"

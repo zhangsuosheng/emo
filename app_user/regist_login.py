@@ -33,9 +33,12 @@ def regist_view(request):
                 elif result==2:
                     return HttpResponse('该用户名可能已注册，如有疑问联系管理员')
 
+                # 创建features类型信息文件
+                result_of_type_docu=settings.ELASTIC_OPTER.insert_message_docu(username=username,docu_list=[{"usage":"features_type","message":{settings.KEY_OF_FRIEND_NAME:'text'}}],id_list=[settings.FEATURES_TYPE_MESSAGE_ID])
+
             except Exception as e:
                 print(e)
-                return HttpResponse('elastic search 服务出错，请联系管理员')
+                return HttpResponse(settings.ELASTIC_ERROR_MESSAGE)
 
             try:
                 user = User.objects.create_user(username=username,password=password,email=email)

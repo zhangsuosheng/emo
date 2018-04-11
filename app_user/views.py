@@ -1,108 +1,209 @@
 from django.shortcuts import render
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 import json
 
-from app_user.models import User,Friends,Remind
+from app_user.models import User, Friends, Remind
 from django.contrib.auth.decorators import login_required
 
 ###################
-from django.conf import  settings
-#主页
+from django.conf import settings
+import datetime
+
+
+# 主页
 
 @login_required
 def index(request):
-    username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)# 仅使用了加盐的cookie来保持登陆
-    query_dict={
-        'query':{
-            'match_all':{},
+    username = request.get_signed_cookie('username', salt=settings.COOKIE_SALT)  # 仅使用了加盐的cookie来保持登陆
+    query_dict = {
+        'query': {
+            'match_all': {},
         },
         'size': 100,
     }
     try:
-        result=settings.ELASTIC_OPTER.query_friend_docu(username,query_dict)
+        result = settings.ELASTIC_OPTER.query_friend_docu(username, query_dict)
     except Exception as e:
         print(e)
-        return HttpResponse('elastic search 服务器查询出错，请联系管理员')
-    hits=result['hits']['hits']
+        return HttpResponse(settings.ELASTIC_ERROR_MESSAGE)
+    hits = result['hits']['hits']
 
-    all_data={}
+    all_data = {}
     for elem_dict in hits:
-        all_data[elem_dict['_id']]=elem_dict['_source']
-    print(hits)#所有可用数据
+        all_data[elem_dict['_id']] = elem_dict['_source']
+    print(hits)  # 所有可用数据
     print("#########################################")
-    print(all_data)#要返回的数据
-    return render(request,"index.html",{'all_data':all_data,'username':username,'KEY_OF_FRIEND_NAME':settings.KEY_OF_FRIEND_NAME})
+    print(all_data)  # 要返回的数据
+    return render(request, "index.html",
+                  {'all_data': all_data, 'username': username, 'KEY_OF_FRIEND_NAME': settings.KEY_OF_FRIEND_NAME,'ELASTIC_ERROR_MESSAGE':settings.ELASTIC_ERROR_MESSAGE})
+
 
 @login_required
 def new_friends(request):
     if request.method == 'POST':
-        username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
+        username = request.get_signed_cookie('username', salt=settings.COOKIE_SALT)
 
-        textnum=eval(request.POST['textnum'])
-        numnum=eval(request.POST['numnum'])
-        text_dict={}
-        for i in range(0,textnum):
-            text_dict[request.POST['texttitle'+str(i)]]=request.POST['textcontent'+str(i)]
-        num_dict={}
-        for i in range(0,numnum):
-            num_dict[request.POST['numtitle'+str(i)]]=eval(request.POST['numcontent'+str(i)])
-        query_dict={settings.KEY_OF_FRIEND_NAME:request.POST[settings.KEY_OF_FRIEND_NAME],"text":text_dict,"num":num_dict}
+        query_dict = {}
+        # {"usage": "features_type", "message": {}}
+        type_dict={"doc":{"message":{}}}
+        num_text = eval(request.POST['num_text'])
+
+        for i in range(0, num_text):
+            key = request.POST['texttitle' + str(i)]
+            value = request.POST['textcontent' + str(i)]
+            query_dict[key] = value
+            type_dict['doc']['message'][key]='text'
+
+
+        num_num = eval(request.POST['num_num'])
+        for i in range(0, num_num):
+            key = request.POST['numtitle' + str(i)]
+            value = eval(request.POST['numcontent' + str(i)])
+            query_dict[key] = value
+            type_dict['doc']['message'][key]='num'
+
+        num_date = eval(request.POST['num_date'])
+        for i in range(0, num_date):
+            key = request.POST['datetitle' + str(i)]
+            value = datetime.datetime.strptime(request.POST['datecontent' + str(i)], "%Y-%m-%d")
+            query_dict[key] = value
+            type_dict['doc']['message'][key]='date'
+
+        num_tag = eval(request.POST['num_tag'])
+        query_dict["标签"] = []
+        for i in range(0, num_tag):
+            query_dict["标签"].append(request.POST['tag' + str(i)])
+
+        query_dict[settings.KEY_OF_FRIEND_NAME] = request.POST.get(settings.KEY_OF_FRIEND_NAME)
 
         try:
-            settings.ELASTIC_OPTER.insert_friend_docu(username,[query_dict])
+            print(type_dict)
+            # 更新features类型信息文件
+            settings.ELASTIC_OPTER.query_update(username=username,query_dict=type_dict,doc_type=settings.MESSAGE_TYPE_NAME,id=settings.FEATURES_TYPE_MESSAGE_ID)
+            # 把新建的好友添加为friens type中的一个document
+            settings.ELASTIC_OPTER.insert_friend_docu(username, [query_dict])
         except Exception as e:
             print(e)
-            return HttpResponse('elastic search服务出错，请联系管理员')
+            return HttpResponse(settings.ELASTIC_ERROR_MESSAGE)
         return HttpResponseRedirect('/')
 
+
 @login_required
-def fuzzy_search(request):
-    pass
+def search_by_tag(request):
+    if request.method == "POST":
+        username = request.get_signed_cookie('username', salt=settings.COOKIE_SALT)
+        fuzzy=request.POST.get('fuzzy')
+        if fuzzy=="true":
+            fuzzy=True
+            query_str = {
+                "query": {
+                    "match": {
+                        "标签": request.POST.get('keyword'),
+                    }
+                }
+            }
+        else:
+            fuzzy=False
+            query_str = {
+                "query": {
+                    "match_phrase": {
+                        "标签": request.POST.get('keyword'),
+                    }
+                }
+            }
+        result = settings.ELASTIC_OPTER.query_friend_docu(username, query_str)
+        # print(result)
+        result_id=[]
+        for elem in result['hits']['hits']:
+            result_id.append([elem['_id'],elem['_score']])
+        return HttpResponse(json.dumps({'fuzzy':fuzzy,'result_id':result_id}))
+    return HttpResponse
+
+@login_required
+def search_by_feature_text(request):
+    username = request.get_signed_cookie('username', salt=settings.COOKIE_SALT)
+    featurename = request.POST.get('featurevalue')
+    keyword = request.POST.get('keyword')
+    query_str = {
+        "query": {
+            "match_phrase": {
+                featurename: keyword,
+            }
+        }
+    }
+    result = settings.ELASTIC_OPTER.query_friend_docu(username, query_str)
+    result_id = []
+    for elem in result['hits']['hits']:
+        result_id.append(elem['_id'])
+    return HttpResponse(json.dumps(result_id))
+
+@login_required
+def search_by_feature_num_or_date(request):
+    username = request.get_signed_cookie('username', salt=settings.COOKIE_SALT)
+    featurename = request.POST.get('featurevalue')
+    top = request.POST.get('top')
+    bottom=request.POST.get('bottom')
+    print(featurename,top,bottom)
+    print(type(featurename),type(top),type(bottom))
+    query_str = {
+        "query": {
+            "range": {
+                featurename:{
+                    "gte":bottom,
+                    "lte":top,
+                }
+            }
+        }
+    }
+    result = settings.ELASTIC_OPTER.query_friend_docu(username, query_str)
+    result_id=[]
+    for elem in result['hits']['hits']:
+        result_id.append(elem['_id'])
+    return HttpResponse(json.dumps(result_id))
 
 
-#event页
+
+@login_required
+def get_types(request):
+    username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
+    # 获取features类型信息文件
+    result=settings.ELASTIC_OPTER.query_by_id(username=username,doc_type=settings.MESSAGE_TYPE_NAME,id=settings.FEATURES_TYPE_MESSAGE_ID)
+    print(result)
+    data=result['_source']['message']
+    return HttpResponse(json.dumps(data))
+
+
+
+
+
+
+
+
+
+
+
+# event页
 def event(request):
-    userid=1
-    user=Remind.objects.filter(usrid_id=userid)
-    return render(request,"event.html",locals())
+    username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
+    return render(request, "event.html", locals())
 
-#给app返回当前事件列表
+
+# 给app返回当前事件列表
 def remind(request):
-    userid=1
-    user=Remind.objects.filter(usrid=userid)
-    list=[]
+    username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
+    user = Remind.objects.filter(usrid=userid)
+    list = []
     for elem in user:
-        year=str(elem.time.year)
-        month=str(elem.time.month)
-        day=str(elem.time.day)
-        hour=str(elem.time.hour)
-        minute=str(elem.time.minute)
+        year = str(elem.time.year)
+        month = str(elem.time.month)
+        day = str(elem.time.day)
+        hour = str(elem.time.hour)
+        minute = str(elem.time.minute)
         friend = Friends.objects.get(friend_id=elem.friend_id_id)
-        list.append({'event_id':elem.id,'friend_id':friend.friend_id,'friend_name':friend.realname,'content':elem.content,'year':year,'month':month,'day':day,'hour':hour,'minute':minute})
-    response = {'status': '1', 'data':list}
-    print(response)
-    return HttpResponse(json.dumps(response), content_type="application/json")
-
-#返回所有好友所有信息
-def friend(request):
-    userid=1
-    user=Friends.objects.filter(usrid=userid)
-    list=[]
-    for elem in user:
-        print(elem.birthday)
-        list.append({"friend_id":elem.friend_id,"realname":elem.realname,"nickname":elem.nickname,
-                     "relation":elem.relation,"development":elem.development,
-                     "record":elem.record,"couple":elem.couple,"phone":elem.phone,
-                     "email": elem.email, "birthplace": elem.birthplace,
-                     "company": elem.company, "position": elem.position,
-                     "politic": elem.politic, "skill": elem.skill,
-                     "interest": elem.interest, "remark": elem.remark,"face": elem.face,
-
-                     "intimacy": elem.intimacy,"sex": elem.sex, "birthday": str(elem.birthday.year)+str(elem.birthday.month)+str(elem.birthday.day),
-                     "age": elem.age, "marriage": elem.marriage,
-                     "qualification": elem.qualification, "salary": elem.salary
-                     })
+        list.append({'event_id': elem.id, 'friend_id': friend.friend_id, 'friend_name': friend.realname,
+                     'content': elem.content, 'year': year, 'month': month, 'day': day, 'hour': hour, 'minute': minute})
     response = {'status': '1', 'data': list}
     print(response)
     return HttpResponse(json.dumps(response), content_type="application/json")
+
