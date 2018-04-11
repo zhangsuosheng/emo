@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 ###################
 from django.conf import settings
+from task1 import sendEmail
 import datetime
 
 
@@ -32,9 +33,9 @@ def index(request):
     all_data = {}
     for elem_dict in hits:
         all_data[elem_dict['_id']] = elem_dict['_source']
-    print(hits)  # 所有可用数据
-    print("#########################################")
-    print(all_data)  # 要返回的数据
+    # print(hits)  # 所有可用数据
+    # print("#########################################")
+    # print(all_data)  # 要返回的数据
     return render(request, "index.html",
                   {'all_data': all_data, 'username': username, 'KEY_OF_FRIEND_NAME': settings.KEY_OF_FRIEND_NAME,'ELASTIC_ERROR_MESSAGE':settings.ELASTIC_ERROR_MESSAGE})
 
@@ -78,7 +79,6 @@ def new_friends(request):
         query_dict[settings.KEY_OF_FRIEND_NAME] = request.POST.get(settings.KEY_OF_FRIEND_NAME)
 
         try:
-            print(type_dict)
             # 更新features类型信息文件
             settings.ELASTIC_OPTER.query_update(username=username,query_dict=type_dict,doc_type=settings.MESSAGE_TYPE_NAME,id=settings.FEATURES_TYPE_MESSAGE_ID)
             # 把新建的好友添加为friens type中的一个document
@@ -113,7 +113,6 @@ def search_by_tag(request):
                 }
             }
         result = settings.ELASTIC_OPTER.query_friend_docu(username, query_str)
-        # print(result)
         result_id=[]
         for elem in result['hits']['hits']:
             result_id.append([elem['_id'],elem['_score']])
@@ -144,8 +143,6 @@ def search_by_feature_num_or_date(request):
     featurename = request.POST.get('featurevalue')
     top = request.POST.get('top')
     bottom=request.POST.get('bottom')
-    print(featurename,top,bottom)
-    print(type(featurename),type(top),type(bottom))
     query_str = {
         "query": {
             "range": {
@@ -169,11 +166,27 @@ def get_types(request):
     username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
     # 获取features类型信息文件
     result=settings.ELASTIC_OPTER.query_by_id(username=username,doc_type=settings.MESSAGE_TYPE_NAME,id=settings.FEATURES_TYPE_MESSAGE_ID)
-    print(result)
     data=result['_source']['message']
     return HttpResponse(json.dumps(data))
 
+@login_required
+def send_email(request):
+    if request.method=="POST":
+        username = request.get_signed_cookie('username', salt=settings.COOKIE_SALT)
+        print(request.POST)
+        ids=request.POST.get('ids').split(',')
+        title=request.POST.get('title')
+        content=request.POST.get('content')
 
+        email_list=[]
+        for elem in ids:
+            result=settings.ELASTIC_OPTER.query_by_id(username,doc_type=settings.FRIENDS_TYPE_NAME,id=elem)
+            if '邮箱' in result['_source']:
+                email_list.append(result['_source']['邮箱'])
+        print(email_list)
+        sendEmail.delay(email_list,title,content)
+
+        return HttpResponse('SUCCESS')
 
 
 
@@ -204,6 +217,5 @@ def remind(request):
         list.append({'event_id': elem.id, 'friend_id': friend.friend_id, 'friend_name': friend.realname,
                      'content': elem.content, 'year': year, 'month': month, 'day': day, 'hour': hour, 'minute': minute})
     response = {'status': '1', 'data': list}
-    print(response)
     return HttpResponse(json.dumps(response), content_type="application/json")
 

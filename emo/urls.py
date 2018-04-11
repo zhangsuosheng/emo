@@ -25,7 +25,6 @@ from django.conf import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls, name="admin"),
-    url(r'^test/$', tests.test1, name="test"),
     url(r'^accounts/login/$', regist_login.login_view, name="login"),
     url(r'^accounts/regist/$', regist_login.regist_view, name="regist"),
     url(r'^accounts/logout/$', regist_login.logout_view, name="logout"),
@@ -39,6 +38,8 @@ urlpatterns = [
     url(r'^searchbyfeature_num_or_date/$', views.search_by_feature_num_or_date, name="searchbyfeature_num_or_date"),
 
     url(r'^gettypes/$', views.get_types, name="gettypes"),
+
+    url(r'^sendemail/$',views.send_email,name="sendemail"),
 
     url(r'^event/$', views.event, name="event"),
 

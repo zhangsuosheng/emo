@@ -9,17 +9,21 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+
     <title>Login</title>
   </head>
 <style>
         html,body{text-align:center;margin:0px auto;}
 </style>
-<body>
-<h1>登录页面</h1>
-<form method = 'post' enctype="multipart/form-data">
+<body id="pageIndex">
+
+<form class="table_fillin" method = 'post' enctype="multipart/form-data">
+    <h1>登录页面</h1>
     {{userform.as_p}}
-    <input type="submit" value = "Login" /><br>
-    <a href="{% url 'regist' %}">go to regist</a>
+    <input class="btn-danger" type="submit" value = "登陆" /><br>
+    <a href="{% url 'regist' %}">现在注册！</a>
 </form>
 </body>
 </html>
