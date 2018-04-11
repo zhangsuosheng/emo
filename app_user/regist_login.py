@@ -72,7 +72,7 @@ def login_view(request):
                 else:
                     return HttpResponse('您的账户已被冻结')
             else:
-                return HttpResponse('用户名或密码错误,请重新登录')
+                return HttpResponse('用户名/密码错误或未注册,请重新登录')
         else:
             return HttpResponse('表单输入不合法')
     else:
