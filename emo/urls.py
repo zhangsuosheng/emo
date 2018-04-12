@@ -23,6 +23,8 @@ from app_user import tests
 
 from django.conf import settings
 
+from django.views.generic import TemplateView
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls, name="admin"),
     url(r'^accounts/login/$', regist_login.login_view, name="login"),
@@ -32,6 +34,8 @@ urlpatterns = [
     url(r'^$', views.index, name="index"),
     url(r'^newfriends/$', views.new_friends, name="newfriends"),
 
+    url(r'^deletefriends/$',views.delete_friends,name="deletefriends"),
+
     # 搜索
     url(r'^searchbytag/$', views.search_by_tag, name="searchbytag"),
     url(r'^searchbyfeature_text/$', views.search_by_feature_text, name="searchbyfeature_text"),
@@ -40,6 +44,8 @@ urlpatterns = [
     url(r'^gettypes/$', views.get_types, name="gettypes"),
 
     url(r'^sendemail/$',views.send_email,name="sendemail"),
+
+    url(r'^waiting/$',TemplateView.as_view(template_name="waiting.html"),name="waiting"),
 
     url(r'^event/$', views.event, name="event"),
 

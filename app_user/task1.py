@@ -6,6 +6,8 @@ import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
 
+import time
+
 # 定义worker（消费者），并指定broker和backend（共享缓冲区）
 app1=Celery('task1_app1',broker='redis://127.0.0.1:6379/0',backend='redis://127.0.0.1:6379/0')
 
@@ -22,7 +24,8 @@ def add_friend_event(username,msg_list):
 
 
 @app1.task
-def sendEmail(receivers,title,content):
+def sendEmail(receivers,title,content,second_delay):
+    time.sleep(second_delay)
     sender = 'zhangsuosheng9@163.com'
     # receivers = ['zhangsuosheng9@163.com']  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
 

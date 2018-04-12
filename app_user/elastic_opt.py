@@ -67,3 +67,7 @@ class Elastic_opter():
     def query_by_id(self,username,doc_type,id):
         result=self.els_conn.get(index=username,doc_type=doc_type,id=id)
         return result
+
+    def delete_by_id(self,username,doc_type,id):
+        result=self.els_conn.delete(index=username,doc_type=doc_type,id=id)
+        return result

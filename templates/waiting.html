@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+    <script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+    <title>Waiting...</title>
+</head>
+<style>
+    html, body {
+        text-align: center;
+        margin: 0px auto;
+    }
+</style>
+<body id="pageIndex">
+
+<div class="table_fillin" method='post' enctype="multipart/form-data">
+    <h1 id="remind"></h1>
+    <script>
+        //设定倒数秒数
+        var t = 4;
+        //显示倒数秒数
+        function showTime() {
+            t -= 1;
+            document.getElementById('remind').innerHTML = "正在更新数据，"+t+"秒后返回主页";
+            if (t == 0) {
+                location.href = "{% url 'index' %}";
+            }
+            //每秒执行一次,showTime()
+            setTimeout("showTime()", 1000);
+        }
+        //执行showTime()
+        showTime();
+    </script>
+</div>
+</body>
+</html>

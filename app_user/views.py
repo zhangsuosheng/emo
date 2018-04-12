@@ -10,7 +10,9 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from task1 import sendEmail
 import datetime
+import time
 
+from django.core.urlresolvers import reverse
 
 # 主页
 
@@ -86,7 +88,8 @@ def new_friends(request):
         except Exception as e:
             print(e)
             return HttpResponse(settings.ELASTIC_ERROR_MESSAGE)
-        return HttpResponseRedirect('/')
+
+        return HttpResponseRedirect(reverse('waiting'))
 
 
 @login_required
@@ -160,7 +163,6 @@ def search_by_feature_num_or_date(request):
     return HttpResponse(json.dumps(result_id))
 
 
-
 @login_required
 def get_types(request):
     username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
@@ -173,20 +175,66 @@ def get_types(request):
 def send_email(request):
     if request.method=="POST":
         username = request.get_signed_cookie('username', salt=settings.COOKIE_SALT)
-        print(request.POST)
         ids=request.POST.get('ids').split(',')
+        if ids==['']:
+            return HttpResponse('并没有要发送邮件的好友。。')
         title=request.POST.get('title')
         content=request.POST.get('content')
+        time_send_str=request.POST.get('date')
+        print(request.POST)
 
-        email_list=[]
-        for elem in ids:
-            result=settings.ELASTIC_OPTER.query_by_id(username,doc_type=settings.FRIENDS_TYPE_NAME,id=elem)
+        try:
+            time_send=datetime.datetime.strptime(time_send_str,'%Y-%m-%dT%H:%M')
+            time_now = datetime.datetime.now()
+            second_now = time.mktime(time_now.timetuple())
+            second_send = time.mktime(time_send.timetuple())
+            second_delay = second_send - second_now
+            if second_delay < 0:
+                return HttpResponse('发送日期已过')
+        except ValueError as e:
+            print(e)
+            return HttpResponse('输入日期格式错误，请重新输入')
+
+        message_list = []
+        for id in ids:
+            result = settings.ELASTIC_OPTER.query_by_id(username, doc_type=settings.FRIENDS_TYPE_NAME, id=id)
+            name_friend=result['_source'][settings.KEY_OF_FRIEND_NAME]
+            title_friend=title.replace('【'+settings.KEY_OF_FRIEND_NAME+'】',name_friend)
+            content_friend=content.replace('【'+settings.KEY_OF_FRIEND_NAME+'】',name_friend)
             if '邮箱' in result['_source']:
-                email_list.append(result['_source']['邮箱'])
-        print(email_list)
-        sendEmail.delay(email_list,title,content)
+                email_friend=result['_source']['邮箱']
+                message={"email":email_friend,"title":title_friend,"content":content_friend,"id":id,"name":name_friend}
+                message_list.append(message)
 
-        return HttpResponse('SUCCESS')
+        print(message_list)
+
+        try:
+            for message in message_list:
+                # (receivers, title, content, second_delay)
+                sendEmail.delay(receivers=[message['email']], title=message['title'], content=message['content'],second_delay=second_delay)
+        except Exception as e:
+            print(e)
+            return HttpResponse('redis/celery服务出错，请联系管理员')
+
+        responsestr='发送任务已加入消息队列，将要给以下用户发送邮件：<br>'
+        responsestr+="发送时间："+str(time_send)+"<br><br>"
+        for message in message_list:
+            responsestr+=message['name']+"："+message['email']+"<br>标题："+message['title']+"<br>内容："+message['content']+"<br><br>"
+
+        return HttpResponse(responsestr)
+
+@login_required
+def delete_friends(request):
+    if request.method=="POST":
+        username = request.get_signed_cookie('username', salt=settings.COOKIE_SALT)
+        friend_id = request.POST.get('friend_id')
+        try:
+            result=settings.ELASTIC_OPTER.delete_by_id(username=username,doc_type=settings.FRIENDS_TYPE_NAME,id=friend_id)
+            print(result)
+        except Exception as e:
+            print(e)
+            return HttpResponse(json.dumps({'status':0}))
+        return HttpResponse(json.dumps({'status':1}))
 
 
 
