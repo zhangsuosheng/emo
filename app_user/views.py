@@ -185,7 +185,8 @@ def send_email(request):
 
         try:
             time_send=datetime.datetime.strptime(time_send_str,'%Y-%m-%dT%H:%M')
-            time_now = datetime.datetime.now()
+            time_now = datetime.datetime.now()+datetime.timedelta(hours=8)
+            print("time_now:",time_now)
             second_now = time.mktime(time_now.timetuple())
             second_send = time.mktime(time_send.timetuple())
             second_delay = second_send - second_now
@@ -220,7 +221,7 @@ def send_email(request):
         responsestr+="发送时间："+str(time_send)+"<br><br>"
         for message in message_list:
             responsestr+=message['name']+"："+message['email']+"<br>标题："+message['title']+"<br>内容："+message['content']+"<br><br>"
-
+        print(responsestr)
         return HttpResponse(responsestr)
 
 @login_required
@@ -235,35 +236,4 @@ def delete_friends(request):
             print(e)
             return HttpResponse(json.dumps({'status':0}))
         return HttpResponse(json.dumps({'status':1}))
-
-
-
-
-
-
-
-
-
-# event页
-def event(request):
-    username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
-    return render(request, "event.html", locals())
-
-
-# 给app返回当前事件列表
-def remind(request):
-    username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
-    user = Remind.objects.filter(usrid=userid)
-    list = []
-    for elem in user:
-        year = str(elem.time.year)
-        month = str(elem.time.month)
-        day = str(elem.time.day)
-        hour = str(elem.time.hour)
-        minute = str(elem.time.minute)
-        friend = Friends.objects.get(friend_id=elem.friend_id_id)
-        list.append({'event_id': elem.id, 'friend_id': friend.friend_id, 'friend_name': friend.realname,
-                     'content': elem.content, 'year': year, 'month': month, 'day': day, 'hour': hour, 'minute': minute})
-    response = {'status': '1', 'data': list}
-    return HttpResponse(json.dumps(response), content_type="application/json")
 

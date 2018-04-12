@@ -47,7 +47,5 @@ urlpatterns = [
 
     url(r'^waiting/$',TemplateView.as_view(template_name="waiting.html"),name="waiting"),
 
-    url(r'^event/$', views.event, name="event"),
-
 
 ]

@@ -25,6 +25,7 @@ def add_friend_event(username,msg_list):
 
 @app1.task
 def sendEmail(receivers,title,content,second_delay):
+    print('sendto',receivers[0],' in ',second_delay)
     time.sleep(second_delay)
     sender = 'zhangsuosheng9@163.com'
     # receivers = ['zhangsuosheng9@163.com']  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
