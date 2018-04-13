@@ -12,15 +12,15 @@ body {
 .table_fillin {
     border-radius: 5px;
     margin: 20px 20px;
-    border-style: inset;
+    border-style: dotted;
     display: inline-block;
     padding: 10px 10px;
 }
 
 .table_fillin input {
     border-radius: 5px;
-    padding: 5px 5px 5px 30px;
-    width: 155px;
+    padding: 5px 10px;
+    width: 200px;
     margin: 10px 10px 10px 10px;
 }
 
@@ -63,20 +63,51 @@ body {
     border-color: #ac2925;
 }
 
-#pageIndex button {
+.simplebutton {
     display: inline-block;
-    padding: 8px 24px;
-    font-family: "微软雅黑";
-    cursor: pointer;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
     text-align: center;
-    text-decoration: none;
-    outline: none;
-    color: #fff;
-    background-color: #32c5d2;
-    border: none;
-    border-radius: 14px;
-    margin: 10px 10px;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #000;
+    background-color: #ffffff;
+    border-color: #f1f4f5;
 }
+
+.simplebutton:hover{
+    color: #fff;
+    background-color: #c9302c;
+    border-color: #ac2925;
+}
+
+/*#pageIndex button {*/
+    /*display: inline-block;*/
+    /*padding: 8px 24px;*/
+    /*font-family: "微软雅黑";*/
+    /*cursor: pointer;*/
+    /*text-align: center;*/
+    /*text-decoration: none;*/
+    /*outline: none;*/
+    /*color: #fff;*/
+    /*background-color: darkred;*/
+    /*border: none;*/
+    /*border-radius: 14px;*/
+    /*margin: 10px 10px;*/
+/*}*/
 
 #pageIndex header {
     text-align: center;
@@ -168,6 +199,7 @@ body {
 
 #pageIndex section.selectBox .labelBox a, #pageIndex .contactsBox a {
     display: inline-block;
+    /*标签底色*/
     background-color: #32c5d2;
     color: #fff;
     text-decoration: none;

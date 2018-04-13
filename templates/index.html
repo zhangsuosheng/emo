@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html>
 <head>
     <title>人脉</title>
@@ -16,7 +15,7 @@
             <img src="{% static 'img/logo2.png' %}">
             <ul>
                 <li><a href="#">人脉</a></li>
-                <li><a href="{% url 'event' %}">事件</a></li>
+                <li><a href="#">事件</a></li>
                 <li><a href="#">个人中心</a></li>
             </ul>
             <a href="{% url 'logout' %}" class="logOut">退出登录</a>
@@ -24,163 +23,14 @@
     </header>
     <section class="selectBox">
         <div class="container">
-            <div class="label">重要度过滤</div>
-            <div class="progress">
-                <div class="progress_bg">
-                    <div class="progress_bar"></div>
-                </div>
-                <div class="progress_Left">
-                    <div class="progress_btn"></div>
-                    <div class="textLeft">0</div>
-                </div>
-                <div class="progress_Right">
-                    <div class="progress_btn"></div>
-                    <div class="textRight">0</div>
-                </div>
-            </div>
-            <div class="remarkLine">*注：数字越大代表越重要</div>
+            <h2>注意：我们建议您给您的每个朋友都设置一个名为“邮箱”文字属性，以便我们发送邮件</h2>
             <p id="all_data" style="display:none;">{{ all_data }}</p>
-            <div class="label">属性</div>
-            <div class="labelBox">
-                <!--这里不要用静态链接，尽量用带参数的url需要修改一下！！！！！！！-->
-                <h3>所有标签</h3>
-                <div id="all_tags"></div>
-
-                <div class="table_fillin" id="">
-                    <p>根据标签搜索</p>
-                    <form id="" action="{% url 'newfriends' %}" method="post" style="display: inline-block">
-                        <span>关键词：</span>
-                        <input id="searchbytagkeyword" type="text" style="margin: 10px 10px;" required><br>
-                        <button id="searchbytagbutton" type="button" style="padding:8px 50px">开始</button>
-                        <input id="searchbytagfuzzy" type="checkbox"
-                               style="border-radius: 5px;padding: 10px 10px;width: auto;margin: 10px 10px;"><span>模糊搜索</span>
-                        <div id="searchbytagresult"></div>
-                    </form>
-                </div>
-
-                <h3>所有属性</h3>
-                <div id="all_features"></div>
-
-                <div class="table_fillin" id="">
-                    <p>根据属性筛选</p>
-                    <form id="" action="{% url 'newfriends' %}" method="post" style="display: inline-block">
-                        <span>选择属性：</span>
-                        <select id="searchbyfeatureselect">
-                        </select>
-                        <div id="searchbyfeaturefillin">
-                        </div>
-                        <button type="button" id="searchbyfeaturebutton" style="padding:8px 50px">开始</button>
-                        <div id="searchbyfeatureresult"></div>
-                        <script>
-                            $('#searchbyfeatureselect').change(function (e) {
-                                let featuretype = $('#searchbyfeatureselect').find('option:selected').attr('name');
-                                let featurevalue = $('#searchbyfeatureselect').find('option:selected')[0].value;
-                                $('#searchbyfeaturefillin').empty();
-                                if (featuretype == "num") {
-                                    $('#searchbyfeaturefillin').append('<br><span>下限：</span><input id="searchbyfeature_num_bottom" type="number" required>');
-                                    $('#searchbyfeaturefillin').append('<br><span>上限：</span><input id="searchbyfeature_num_top" type="number" required>');
-                                } else if (featuretype == "text") {
-                                    $('#searchbyfeaturefillin').append('<br><span>关键词：</span><input id="searchbyfeature_text" type="text" required>');
-                                } else if (featuretype == "date") {
-                                    $('#searchbyfeaturefillin').append('<br><span>下限：</span><input id="searchbyfeature_date_bottom" type="date" required>');
-                                    $('#searchbyfeaturefillin').append('<br><span>上限：</span><input id="searchbyfeature_date_top" type="date" required>');
-                                }
-                            });
-                            $('#searchbyfeaturebutton').click(function (e) {
-                                let featuretype = $('#searchbyfeatureselect').find('option:selected').attr('name');
-                                let featurevalue = $('#searchbyfeatureselect').find('option:selected')[0].value;
-
-                                if (featuretype == "text") {
-                                    $.ajax({
-                                        url: "{% url 'searchbyfeature_text' %}",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: {
-                                            featurevalue: featurevalue,
-                                            keyword: $('#searchbyfeature_text')[0].value
-                                        },
-                                        success: function (data) {
-                                            $('#searchbyfeatureresult').empty();
-                                            $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
-                                            for (let i = 0; i < data.length; i++) {
-                                                $('#searchbyfeatureresult').append('<a name="' + data[i] + '" onclick="showFriendsDetail(this,event,\'' + data[i] + '\')">' + all_data[data[i]]["{{ KEY_OF_FRIEND_NAME }}"] + '</a>');
-                                            }
-                                        },
-                                        error: function (res) {
-                                            $('#searchbyfeatureresult').empty();
-                                            $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
-                                            alert("{{ ELASTIC_ERROR_MESSAGE }}");
-                                        }
-
-                                    });
-                                }
-
-
-                                else if (featuretype == "num") {
-                                    $.ajax({
-                                        url: "{% url 'searchbyfeature_num_or_date' %}",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: {
-                                            featurevalue: featurevalue,
-                                            bottom: $('#searchbyfeature_num_bottom')[0].value,
-                                            top: $('#searchbyfeature_num_top')[0].value,
-                                        },
-                                        success: function (data) {
-                                            $('#searchbyfeatureresult').empty();
-                                            $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
-                                            for (let i = 0; i < data.length; i++) {
-                                                $('#searchbyfeatureresult').append('<a name="' + data[i] + '" onclick="showFriendsDetail(this,event,\'' + data[i] + '\')">' + all_data[data[i]]["{{ KEY_OF_FRIEND_NAME }}"] + '</a>');
-                                            }
-                                        },
-                                        error: function (res) {
-                                            $('#searchbyfeatureresult').empty();
-                                            $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
-                                            alert("{{ ELASTIC_ERROR_MESSAGE }}");
-                                        }
-
-                                    });
-                                }
-
-
-                                else if (featuretype == "date") {
-                                    $.ajax({
-                                        url: "{% url 'searchbyfeature_num_or_date' %}",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: {
-                                            featurevalue: featurevalue,
-                                            bottom: $('#searchbyfeature_date_bottom')[0].value,
-                                            top: $('#searchbyfeature_date_top')[0].value,
-                                        },
-                                        success: function (data) {
-                                            $('#searchbyfeatureresult').empty();
-                                            $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
-                                            for (let i = 0; i < data.length; i++) {
-                                                $('#searchbyfeatureresult').append('<a name="' + data[i] + '" onclick="showFriendsDetail(this,event,\'' + data[i] + '\')">' + all_data[data[i]]["{{ KEY_OF_FRIEND_NAME }}"] + '</a>');
-                                            }
-                                        },
-                                        error: function (res) {
-                                            $('#searchbyfeatureresult').empty();
-                                            $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
-                                            alert("{{ ELASTIC_ERROR_MESSAGE }}");
-                                        }
-
-                                    });
-                                }
-                            });
-                        </script>
-                    </form>
-                </div>
-            </div>
             <div class="label">朋友</div>
             <div class="labelBox">
-                <h3>所有朋友</h3>
-                <div id="all_friends"></div>
-                <h3>创建朋友</h3>
+                <h1>创建朋友</h1>
                 <div id="newfriendsdiv" style="display: inline-block;padding: 10px 10px;">
                     <form class="table_fillin" id="newfriends" action="{% url 'newfriends' %}" method="post"
-                          style="display: inline-block">
+                          style="display: inline-block;">
                         {#                        {% csrf_token %}#}
                         <span>朋友姓名：</span>
                         <input name="{{ KEY_OF_FRIEND_NAME }}" type="text" required>
@@ -192,7 +42,60 @@
                         <button type="button" id="add_num_label">添加数值属性</button>
                         <button type="button" id="add_date_label">添加日期属性</button>
                         <br>
-                        <button type="submit" id="submit_newfriends" style="padding:8px 100px">提交</button>
+                        <button class="btn-danger" type="submit" id="submit_newfriends" style="padding:8px 100px">提交
+                        </button>
+                    </form>
+                </div>
+
+                <h1>所有朋友</h1>
+                <div id="all_friends"></div>
+                <form method="POST" action="{% url 'sendemail' %}" id="sendtoalldiv" class="table_fillin">
+                    <h4>发送邮件给所有朋友</h4>
+                    <h6>您可以在标题和内容中用“【{{ KEY_OF_FRIEND_NAME }}】”字样表示出您想要填写您朋友名字的地方，我们在发送邮件时将自动将“【{{ KEY_OF_FRIEND_NAME }}】”字段替换为该朋友的姓名。另：发送时间这个输入框有时会发生光标乱跳的情况，解决办法：关闭中文输入法</h6>
+                    <span>发送时间：</span><input type="datetime-local" name="date" required><br>
+                    <span>标题：</span><input type="text" name="title" placeholder="生日快乐" required><br>
+                    <span>内容：</span><input type="text" name="content" placeholder="【朋友姓名】，祝你生日快乐！" required><br>
+                    <button type="submit" class="btn-danger" id="sendtoallbutton" style="padding: 8px 50px;">开始</button>
+                </form>
+                <script>
+
+                </script>
+            </div>
+
+            <div class="label">属性</div>
+            <div class="labelBox">
+                <!--这里不要用静态链接，尽量用带参数的url需要修改一下！！！！！！！-->
+                <h1>所有标签</h1>
+                <div id="all_tags"></div>
+
+                <div class="table_fillin" id="">
+                    <h4>根据标签搜索</h4>
+                    <form id="" action="{% url 'newfriends' %}" method="post" style="display: inline-block">
+                        <span>关键词：</span>
+                        <input id="searchbytagkeyword" type="text" style="margin: 10px 10px;" required><br>
+                        <button class="btn-danger" id="searchbytagbutton" type="button" style="padding:8px 50px">开始
+                        </button>
+                        <input id="searchbytagfuzzy" type="checkbox"
+                               style="border-radius: 5px;padding: 10px 10px;width: auto;margin: 10px 10px;"><span>模糊搜索</span>
+                        <div id="searchbytagresult"></div>
+                    </form>
+                </div>
+
+                <h1>所有属性</h1>
+                <div id="all_features"></div>
+
+                <div class="table_fillin" id="">
+                    <h4>根据属性筛选</h4>
+                    <form id="" action="{% url 'newfriends' %}" method="post" style="display: inline-block">
+                        <span>选择属性：</span>
+                        <select id="searchbyfeatureselect">
+                        </select>
+                        <div id="searchbyfeaturefillin">
+                        </div>
+                        <button class="btn-danger" type="button" id="searchbyfeaturebutton" style="padding:8px 50px">
+                            开始
+                        </button>
+                        <div id="searchbyfeatureresult"></div>
                     </form>
                 </div>
             </div>
@@ -224,7 +127,29 @@
         </div>
         <div class="addLable"><img src="{% static 'img/Tag-Add.png' %}"></div>
         <div style="text-align: center">
-            <button class="btn-danger" style="padding: 6px 80px;">删除该朋友</button>
+            <button id="friend_detail_delete" onclick="deleteFriend()" class="btn-danger" style="padding: 6px 80px;">
+                删除该朋友
+            </button>
+            <script>
+                function deleteFriend() {
+                    $.ajax({
+                        url: "{% url 'deletefriends' %}",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            friend_id: $('#friend_detail_delete')[0].name,
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            window.location.href = "{% url 'waiting' %}";
+                        },
+                        error: function (res) {
+                            console.log(res);
+                            alert("{{ ELASTIC_ERROR_MESSAGE }}");
+                        }
+                    })
+                }
+            </script>
         </div>
     </div>
 </div>
@@ -302,17 +227,22 @@
         }
     }
     features = features.unique3();
+    let all_friend_id_list = [];
     for (id in all_data) {
+        all_friend_id_list.push(id);
         $('#all_friends').append('<a name="' + all_data[id] + '" onclick="showFriendsDetail(this,event,\'' + id + '\')">' + all_data[id]['{{ KEY_OF_FRIEND_NAME }}'] + '</a>');
     }
+
+    {#    将所有朋友id填入给所有朋友发送邮件的框内#}
+    $('#sendtoalldiv').append('<input name="ids" value="' + all_friend_id_list + '" type="text" style="display:none;">');
 
     for (key in tags) {
         $('#all_tags').append('<a name="' + tags[key] + '" onclick="showTagsDetail(this,event)">' + key + '</a>');
     }
 
     console.log(features);
-    for (let i=0;i<features.length;i++) {
-        if(features[i]=="标签")continue;
+    for (let i = 0; i < features.length; i++) {
+        if (features[i] == "标签")continue;
         $('#all_features').append('<a name="' + features[i] + '" onclick="">' + features[i] + '</a>');
     }
 
@@ -432,7 +362,7 @@
         $('#tag_detail_namelist').empty();
         $('#tag_detail').show();
         let namelist = obj.name.split(",");
-        $('#tag_detail_tagname').html("拥有" + obj.innerHTML + "标签的朋友");
+        $('#tag_detail_tagname').html("拥有“" + obj.innerHTML + "”标签的朋友：");
         for (let i = 0; i < namelist.length; i++) {
             $('#tag_detail_namelist').append('<div class="labelItem" onclick="showFriendsDetail(this,event,\'' + namelist[i] + '\')">' + all_data[namelist[i]]['{{ KEY_OF_FRIEND_NAME }}'] + '</div>')
         }
@@ -444,6 +374,8 @@
         let frienddetail = all_data[id];
         $('#friend_detail_features').append('<div name="' + id + '">' + frienddetail["{{ KEY_OF_FRIEND_NAME }}"] + '</div>')
 
+        $('#friend_detail_delete')[0].name = id;
+
         for (key in frienddetail) {
             if (key == "标签" || key == "朋友姓名")continue;
             $('#friend_detail_features').append('<div name="' + id + '">' + key + ':' + frienddetail[key] + '</div>')
@@ -451,10 +383,6 @@
         for (let i = 0; i < frienddetail["标签"].length; i++) {
             $('#friend_detail_taglist').append('<div class="labelItem">' + frienddetail["标签"][i] + '<div class="delete">X</div></div>')
         }
-    }
-
-    function filterByFeature() {
-
     }
 </script>
 {############################################################################}
@@ -475,12 +403,26 @@
                 $('#searchbytagresult').append('<p>搜索结果:<\p>');
                 let fuzzy = data['fuzzy'];
                 data = data['result_id'];
+                let tag_id_list = [];
                 for (let i = 0; i < data.length; i++) {
+                    tag_id_list.push(data[i][0]);
                     if (i != 0) $('#searchbytagresult').append('<br>');
                     $('#searchbytagresult').append('<a name="' + data[i][0] + '" onclick="showFriendsDetail(this,event,\'' + data[i][0] + '\')">' + all_data[data[i][0]]["{{ KEY_OF_FRIEND_NAME }}"] + '</a>');
                     if (fuzzy) $('#searchbytagresult').append('<span>匹配度：' + data[i][1] + '</span>')
                 }
-                alert('yes');
+                $('#searchbytagresult').append(
+                    '<form method="POST" action="{% url 'sendemail' %}" id="sendtotagdiv" class="table_fillin">' +
+                    '<h4>发送邮件给搜索结果中的朋友</h4>' +
+                    '<h6>您可以在标题和内容中用“【{{ KEY_OF_FRIEND_NAME }}】”字样表示出您想要填写您朋友名字的地方，我们在发送邮件时将自动将“【{{ KEY_OF_FRIEND_NAME }}】”字段替换为该朋友的姓名。另：发送时间这个输入框有时会发生光标乱跳的情况，解决办法：关闭中文输入法</h6>' +
+                    '<span>发送时间：</span><input type="datetime-local" name="date" required><br>' +
+                    '<span>标题：</span><input type="text" name="title" placeholder="生日快乐" required><br>' +
+                    '<span>内容：</span><input type="text" name="content" placeholder="【朋友姓名】，祝你生日快乐！" required><br>' +
+                    '<button type="submit" class="btn-danger" id="sendtotagbutton" style="padding: 8px 50px;">开始</button>' +
+                    '</form>'
+                );
+                console.log(tag_id_list)
+                $('#sendtotagdiv').append('<input name="ids" value="' + tag_id_list + '" type="text" style="display:none;">');
+
             },
             error: function (res) {
                 $('#searchbytagresult').empty();
@@ -489,8 +431,126 @@
             }
         })
     })
+</script>
+{############################################################################}
+{############################################################################}
+{####筛选###############}
+<script>
+    function sendEmailFeature(data) {
+        $('#searchbyfeatureresult').append(
+            '<form method="POST" action="{% url 'sendemail' %}" id="sendtofeaturediv" class="table_fillin">' +
+            '<h4>发送邮件给筛选结果中的朋友</h4>' +
+            '<h6>您可以在标题和内容中用“【{{ KEY_OF_FRIEND_NAME }}】”字样表示出您想要填写您朋友名字的地方，我们在发送邮件时将自动将“【{{ KEY_OF_FRIEND_NAME }}】”字段替换为该朋友的姓名。另：发送时间这个输入框有时会发生光标乱跳的情况，解决办法：关闭中文输入法</h6>' +
+            '<span>发送时间：</span><input type="datetime-local" name="date" required><br>' +
+            '<span>标题：</span><input type="text" name="title" placeholder="生日快乐" required><br>' +
+            '<span>内容：</span><input type="text" name="content" placeholder="【朋友姓名】，祝你生日快乐！" required><br>' +
+            '<button type="submit" class="btn-danger" id="sendtofeaturebutton" style="padding: 8px 50px;">开始</button>' +
+            '</form>'
+        );
+        $('#sendtofeaturediv').append('<input name="ids" value="' + data + '" type="text" style="display:none;">');
+
+    }
+
+    $('#searchbyfeatureselect').change(function (e) {
+        let featuretype = $('#searchbyfeatureselect').find('option:selected').attr('name');
+        let featurevalue = $('#searchbyfeatureselect').find('option:selected')[0].value;
+        $('#searchbyfeaturefillin').empty();
+        if (featuretype == "num") {
+            $('#searchbyfeaturefillin').append('<br><span>下限：</span><input id="searchbyfeature_num_bottom" type="number" required>');
+            $('#searchbyfeaturefillin').append('<br><span>上限：</span><input id="searchbyfeature_num_top" type="number" required>');
+        } else if (featuretype == "text") {
+            $('#searchbyfeaturefillin').append('<br><span>关键词：</span><input id="searchbyfeature_text" type="text" required>');
+        } else if (featuretype == "date") {
+            $('#searchbyfeaturefillin').append('<br><span>下限：</span><input id="searchbyfeature_date_bottom" type="date" required>');
+            $('#searchbyfeaturefillin').append('<br><span>上限：</span><input id="searchbyfeature_date_top" type="date" required>');
+        }
+    });
+    $('#searchbyfeaturebutton').click(function (e) {
+        let featuretype = $('#searchbyfeatureselect').find('option:selected').attr('name');
+        let featurevalue = $('#searchbyfeatureselect').find('option:selected')[0].value;
+
+        if (featuretype == "text") {
+            $.ajax({
+                url: "{% url 'searchbyfeature_text' %}",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    featurevalue: featurevalue,
+                    keyword: $('#searchbyfeature_text')[0].value
+                },
+                success: function (data) {
+                    $('#searchbyfeatureresult').empty();
+                    $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
+                    for (let i = 0; i < data.length; i++) {
+                        $('#searchbyfeatureresult').append('<a name="' + data[i] + '" onclick="showFriendsDetail(this,event,\'' + data[i] + '\')">' + all_data[data[i]]["{{ KEY_OF_FRIEND_NAME }}"] + '</a>');
+                    }
+                    sendEmailFeature(data);
+                },
+                error: function (res) {
+                    $('#searchbyfeatureresult').empty();
+                    $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
+                    alert("{{ ELASTIC_ERROR_MESSAGE }}");
+                }
+
+            });
+        }
 
 
+        else if (featuretype == "num") {
+            $.ajax({
+                url: "{% url 'searchbyfeature_num_or_date' %}",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    featurevalue: featurevalue,
+                    bottom: $('#searchbyfeature_num_bottom')[0].value,
+                    top: $('#searchbyfeature_num_top')[0].value,
+                },
+                success: function (data) {
+                    $('#searchbyfeatureresult').empty();
+                    $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
+                    for (let i = 0; i < data.length; i++) {
+                        $('#searchbyfeatureresult').append('<a name="' + data[i] + '" onclick="showFriendsDetail(this,event,\'' + data[i] + '\')">' + all_data[data[i]]["{{ KEY_OF_FRIEND_NAME }}"] + '</a>');
+                    }
+                    sendEmailFeature(data);
+                },
+                error: function (res) {
+                    $('#searchbyfeatureresult').empty();
+                    $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
+                    alert("{{ ELASTIC_ERROR_MESSAGE }}");
+                }
+
+            });
+        }
+
+
+        else if (featuretype == "date") {
+            $.ajax({
+                url: "{% url 'searchbyfeature_num_or_date' %}",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    featurevalue: featurevalue,
+                    bottom: $('#searchbyfeature_date_bottom')[0].value,
+                    top: $('#searchbyfeature_date_top')[0].value,
+                },
+                success: function (data) {
+                    $('#searchbyfeatureresult').empty();
+                    $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
+                    for (let i = 0; i < data.length; i++) {
+                        $('#searchbyfeatureresult').append('<a name="' + data[i] + '" onclick="showFriendsDetail(this,event,\'' + data[i] + '\')">' + all_data[data[i]]["{{ KEY_OF_FRIEND_NAME }}"] + '</a>');
+                    }
+                    sendEmailFeature(data);
+                },
+                error: function (res) {
+                    $('#searchbyfeatureresult').empty();
+                    $('#searchbyfeatureresult').append('<p>筛选结果:<\p>');
+                    alert("{{ ELASTIC_ERROR_MESSAGE }}");
+                }
+
+            });
+        }
+    });
 </script>
 </body>
 </html>

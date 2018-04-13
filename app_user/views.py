@@ -8,8 +8,11 @@ from django.contrib.auth.decorators import login_required
 
 ###################
 from django.conf import settings
+from task1 import sendEmail
 import datetime
+import time
 
+from django.core.urlresolvers import reverse
 
 # 主页
 
@@ -32,9 +35,9 @@ def index(request):
     all_data = {}
     for elem_dict in hits:
         all_data[elem_dict['_id']] = elem_dict['_source']
-    print(hits)  # 所有可用数据
-    print("#########################################")
-    print(all_data)  # 要返回的数据
+    # print(hits)  # 所有可用数据
+    # print("#########################################")
+    # print(all_data)  # 要返回的数据
     return render(request, "index.html",
                   {'all_data': all_data, 'username': username, 'KEY_OF_FRIEND_NAME': settings.KEY_OF_FRIEND_NAME,'ELASTIC_ERROR_MESSAGE':settings.ELASTIC_ERROR_MESSAGE})
 
@@ -78,7 +81,6 @@ def new_friends(request):
         query_dict[settings.KEY_OF_FRIEND_NAME] = request.POST.get(settings.KEY_OF_FRIEND_NAME)
 
         try:
-            print(type_dict)
             # 更新features类型信息文件
             settings.ELASTIC_OPTER.query_update(username=username,query_dict=type_dict,doc_type=settings.MESSAGE_TYPE_NAME,id=settings.FEATURES_TYPE_MESSAGE_ID)
             # 把新建的好友添加为friens type中的一个document
@@ -86,7 +88,8 @@ def new_friends(request):
         except Exception as e:
             print(e)
             return HttpResponse(settings.ELASTIC_ERROR_MESSAGE)
-        return HttpResponseRedirect('/')
+
+        return HttpResponseRedirect(reverse('waiting'))
 
 
 @login_required
@@ -113,7 +116,6 @@ def search_by_tag(request):
                 }
             }
         result = settings.ELASTIC_OPTER.query_friend_docu(username, query_str)
-        # print(result)
         result_id=[]
         for elem in result['hits']['hits']:
             result_id.append([elem['_id'],elem['_score']])
@@ -144,8 +146,6 @@ def search_by_feature_num_or_date(request):
     featurename = request.POST.get('featurevalue')
     top = request.POST.get('top')
     bottom=request.POST.get('bottom')
-    print(featurename,top,bottom)
-    print(type(featurename),type(top),type(bottom))
     query_str = {
         "query": {
             "range": {
@@ -163,47 +163,77 @@ def search_by_feature_num_or_date(request):
     return HttpResponse(json.dumps(result_id))
 
 
-
 @login_required
 def get_types(request):
     username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
     # 获取features类型信息文件
     result=settings.ELASTIC_OPTER.query_by_id(username=username,doc_type=settings.MESSAGE_TYPE_NAME,id=settings.FEATURES_TYPE_MESSAGE_ID)
-    print(result)
     data=result['_source']['message']
     return HttpResponse(json.dumps(data))
 
+@login_required
+def send_email(request):
+    if request.method=="POST":
+        username = request.get_signed_cookie('username', salt=settings.COOKIE_SALT)
+        ids=request.POST.get('ids').split(',')
+        if ids==['']:
+            return HttpResponse('并没有要发送邮件的好友。。')
+        title=request.POST.get('title')
+        content=request.POST.get('content')
+        time_send_str=request.POST.get('date')
+        print(request.POST)
 
+        try:
+            time_send=datetime.datetime.strptime(time_send_str,'%Y-%m-%dT%H:%M')
+            time_now = datetime.datetime.now()+datetime.timedelta(hours=8)
+            print("time_now:",time_now)
+            second_now = time.mktime(time_now.timetuple())
+            second_send = time.mktime(time_send.timetuple())
+            second_delay = second_send - second_now
+            if second_delay < 0:
+                return HttpResponse('发送日期已过')
+        except ValueError as e:
+            print(e)
+            return HttpResponse('输入日期格式错误，请重新输入')
 
+        message_list = []
+        for id in ids:
+            result = settings.ELASTIC_OPTER.query_by_id(username, doc_type=settings.FRIENDS_TYPE_NAME, id=id)
+            name_friend=result['_source'][settings.KEY_OF_FRIEND_NAME]
+            title_friend=title.replace('【'+settings.KEY_OF_FRIEND_NAME+'】',name_friend)
+            content_friend=content.replace('【'+settings.KEY_OF_FRIEND_NAME+'】',name_friend)
+            if '邮箱' in result['_source']:
+                email_friend=result['_source']['邮箱']
+                message={"email":email_friend,"title":title_friend,"content":content_friend,"id":id,"name":name_friend}
+                message_list.append(message)
 
+        print(message_list)
 
+        try:
+            for message in message_list:
+                # (receivers, title, content, second_delay)
+                sendEmail.delay(receivers=[message['email']], title=message['title'], content=message['content'],second_delay=second_delay)
+        except Exception as e:
+            print(e)
+            return HttpResponse('redis/celery服务出错，请联系管理员')
 
+        responsestr='发送任务已加入消息队列，将要给以下用户发送邮件：<br>'
+        responsestr+="发送时间："+str(time_send)+"<br><br>"
+        for message in message_list:
+            responsestr+=message['name']+"："+message['email']+"<br>标题："+message['title']+"<br>内容："+message['content']+"<br><br>"
+        print(responsestr)
+        return HttpResponse(responsestr)
 
-
-
-
-
-# event页
-def event(request):
-    username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
-    return render(request, "event.html", locals())
-
-
-# 给app返回当前事件列表
-def remind(request):
-    username=request.get_signed_cookie('username',salt=settings.COOKIE_SALT)
-    user = Remind.objects.filter(usrid=userid)
-    list = []
-    for elem in user:
-        year = str(elem.time.year)
-        month = str(elem.time.month)
-        day = str(elem.time.day)
-        hour = str(elem.time.hour)
-        minute = str(elem.time.minute)
-        friend = Friends.objects.get(friend_id=elem.friend_id_id)
-        list.append({'event_id': elem.id, 'friend_id': friend.friend_id, 'friend_name': friend.realname,
-                     'content': elem.content, 'year': year, 'month': month, 'day': day, 'hour': hour, 'minute': minute})
-    response = {'status': '1', 'data': list}
-    print(response)
-    return HttpResponse(json.dumps(response), content_type="application/json")
+@login_required
+def delete_friends(request):
+    if request.method=="POST":
+        username = request.get_signed_cookie('username', salt=settings.COOKIE_SALT)
+        friend_id = request.POST.get('friend_id')
+        try:
+            result=settings.ELASTIC_OPTER.delete_by_id(username=username,doc_type=settings.FRIENDS_TYPE_NAME,id=friend_id)
+            print(result)
+        except Exception as e:
+            print(e)
+            return HttpResponse(json.dumps({'status':0}))
+        return HttpResponse(json.dumps({'status':1}))
 
