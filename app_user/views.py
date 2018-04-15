@@ -185,7 +185,8 @@ def send_email(request):
 
         try:
             time_send=datetime.datetime.strptime(time_send_str,'%Y-%m-%dT%H:%M')
-            time_now = datetime.datetime.now()+datetime.timedelta(hours=8)
+            # time_now = datetime.datetime.now()+datetime.timedelta(hours=8)
+            time_now = datetime.datetime.now()
             print("time_now:",time_now)
             second_now = time.mktime(time_now.timetuple())
             second_send = time.mktime(time_send.timetuple())

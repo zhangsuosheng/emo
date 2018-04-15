@@ -42,15 +42,14 @@ INSTALLED_APPS = [
 ]
 
 #elastic search服务位置，目前为单节点
-ELASTIC_HOST='139.199.32.101'
+ELASTIC_HOST='127.0.0.1'
 ELASTIC_PORT=9200
 
 # django项目位置
 HOST='127.0.0.1'
 PORT=8000
 
-# USE_TZ = False
-# TIME_ZONE = 'Asia/Shanghai'
+
 
 #在这里定义一下要用的中间件，request从上到下依次经过各个中间件，上面的中间件调用下面的中间件同时把请求发送给下面的中间件
 #一般我们把更加重要的中间件放在上面，例如拦截请求
@@ -132,15 +131,18 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+USE_TZ = False
+TIME_ZONE = 'Asia/Shanghai'
 
-TIME_ZONE = 'UTC'
+# LANGUAGE_CODE = 'en-us'
 
-USE_I18N = True
+# TIME_ZONE = 'UTC'
 
-USE_L10N = True
+# USE_I18N = True
 
-USE_TZ = True
+# USE_L10N = True
+
+# USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
