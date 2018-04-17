@@ -3,7 +3,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 import json
 
-from app_user.models import User, Friends, Remind
 from django.contrib.auth.decorators import login_required
 
 ###################

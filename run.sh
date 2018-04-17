@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 echo 'start els...'
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.161-0.b14.el7_4.x86_64
 export ES_JAVA_OPTS='-Xms200m -Xmx200m'
@@ -17,3 +16,5 @@ echo 'start django...'
 cd ..
 export PYTHONPATH=/home/emo/emo/app_user/
 nohup python3 manage.py runserver 0.0.0.0:8000 &>/home/emo/emo/log/django.log &
+
+
